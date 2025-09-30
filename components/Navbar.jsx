@@ -83,7 +83,7 @@ const Navbar = () => {
                 >
                   Properties
                 </Link>
-                {isLoggedIn && (
+                {!isLoggedIn && (
                   <Link
                     href="/properties/add"
                     className={`text-white rounded-md px-3 py-2 ${
@@ -100,7 +100,7 @@ const Navbar = () => {
           </div>
           {/* 
           <!-- Right Side Menu (Logged Out) --> */}
-          {!isLoggedIn && (
+          {isLoggedIn && (
             <div className="hidden md:block md:ml-6">
               <div className="flex items-center">
                 <button className="flex items-center bg-amber-300 text-black hover:bg-amber-400 rounded-md px-3 py-2">
@@ -113,7 +113,7 @@ const Navbar = () => {
 
           {/* 
           <!-- Right Side Menu (Logged In) --> */}
-          {isLoggedIn && (
+          {!isLoggedIn && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
               <Link href="/messages" className="relative group">
                 <button
@@ -243,7 +243,7 @@ const Navbar = () => {
                 Add Property
               </Link>
             )}
-            {!isLoggedIn && (
+            {isLoggedIn && (
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="mt-1 flex items-center rounded-md px-3 py-2
