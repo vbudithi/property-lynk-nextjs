@@ -1,34 +1,54 @@
 import React from "react";
 import InfoBox from "./InfoBox";
+import { FaKey, FaHome } from "react-icons/fa";
 
 const InfoBoxes = () => {
   return (
-    <section>
+    <section className="py-12">
       <div className="container-xl lg:container m-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+          {/* For Renters */}
           <InfoBox
-            heading="For Renters"
-            backgroundColor="bg-gray-100"
+            heading={
+              <span className="flex items-center gap-2">
+                <FaKey className="text-blue-500" />
+                For Renters
+              </span>
+            }
+            backgroundColor="bg-gradient-to-br from-gray-100 to-gray-200"
             buttonInfo={{
               text: "Browse Properties",
               link: "/properties",
               backgroundColor: "bg-black",
             }}
           >
-            Find your dream rental property . Bookmark properties and contact
-            owners.
+            <div className="text-gray-600 leading-relaxed">
+              Find your dream rental property. Save your favorites, bookmark
+              properties, and contact owners directly. Start your journey to the
+              perfect home today!
+            </div>
           </InfoBox>
+
+          {/* For Property Owners */}
           <InfoBox
-            heading="For Property Owners"
-            backgroundColor="bg-blue-100"
+            heading={
+              <span className="flex items-center gap-2">
+                <FaHome className="text-blue-600" />
+                For Property Owners
+              </span>
+            }
+            backgroundColor="bg-gradient-to-br from-blue-50 to-blue-100"
             buttonInfo={{
               text: "Add Property",
               link: "/properties/add",
               backgroundColor: "bg-blue-500",
             }}
           >
-            List your properties and reach potential tenants. Rent as an AIrbnb
-            or long term.
+            <div className="text-gray-600 leading-relaxed">
+              List your property and reach thousands of potential tenants.
+              Whether it’s a short Airbnb stay or a long-term rental, you’re in
+              control. Grow your reach with ease.
+            </div>
           </InfoBox>
         </div>
       </div>
