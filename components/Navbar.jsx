@@ -58,7 +58,10 @@ const Navbar = () => {
             <Link className="flex flex-shrink-0 items-center" href="/">
               <Image className="h-13 w-auto" src={logo} alt="PropertyLynk" />
 
-              <span className="hidden md:block text-white text-2xl font-bold ml-2">
+              <span
+                className="hidden md:block text-white text-2xl font-bold ml-2 
+  transition-all duration-500 hover:bg-gradient-to-r hover:from-orange-400 hover:to-yellow-400 hover:bg-clip-text hover:text-transparent"
+              >
                 PropertyLynk
               </span>
             </Link>
