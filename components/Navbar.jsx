@@ -20,7 +20,6 @@ const Navbar = () => {
     setIsProfileMenuOpen(false);
   }, [pathname]);
 
-  console.log(pathname);
   return (
     <nav className="relative bg-gradient-to-r from-blue-400 to-blue-600 border-b border-white/10 ">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -56,7 +55,7 @@ const Navbar = () => {
           <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
             {/* <!-- Logo --> */}
             <Link className="flex flex-shrink-0 items-center" href="/">
-              <Image className="h-13 w-auto" src={logo} alt="PropertyLynk" />
+              <Image className="h-12 w-auto" src={logo} alt="PropertyLynk" />
 
               <span
                 className="hidden md:block text-white text-2xl font-bold ml-2 

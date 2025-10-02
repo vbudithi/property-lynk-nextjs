@@ -1,9 +1,8 @@
 "use client";
-
 import React from "react";
 import { ClipLoader } from "react-spinners";
 
-export default function LoadingPage() {
+const loading = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="flex flex-col items-center">
@@ -17,4 +16,6 @@ export default function LoadingPage() {
       </div>
     </div>
   );
-}
+};
+
+export default loading;
