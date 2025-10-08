@@ -44,15 +44,15 @@ const HomeProperties = () => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {recentProperties.length === 0 ? (
+            {!recentProperties || recentProperties.length === 0 ? (
               <p>No Properties Found</p>
             ) : (
               recentProperties.map((property) => (
-                <motion.div key={property._id} variants={item}>
+                <motion.article key={property._id} variants={item}>
                   <PropertyCard property={property} />
-                </motion.div>
+                </motion.article>
               ))
             )}
           </motion.div>
