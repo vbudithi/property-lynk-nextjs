@@ -66,7 +66,7 @@ const PropertySchema = new Schema(
         type: String,
       },
       phone: {
-        type: Sring,
+        type: String,
       },
     },
 
@@ -89,4 +89,4 @@ const PropertySchema = new Schema(
 
 const Property = models.Property || model("Property", PropertySchema);
 
-export default User;
+export default Property;

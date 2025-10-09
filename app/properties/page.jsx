@@ -1,44 +1,30 @@
-"use client";
-import React from "react";
-import properties from "@/properties.json";
-import PropertyCard from "@/components/PropertyCard";
-import { motion } from "framer-motion";
+import PropertiesGrid from "@/components/PropertyGrid";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2, // cards appear one by one
-    },
-  },
-};
+const PropertiesPage = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`, {
+    cache: "no-store",
+  });
 
-const item = {
-  hidden: { y: -50, opacity: 0 }, // start above
-  show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } }, // fall smoothly
-};
+  if (!res.ok) throw new Error("Failed to fetch properties");
 
-const PropertiesPage = () => {
+  const data = await res.json();
+  const properties = data.properties || [];
+
+  //sort properties by date
+  properties.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  if (!Array.isArray(properties) || properties.length === 0) {
+    return (
+      <section className="px-4 py-6 text-center">
+        <p>No properties found</p>
+      </section>
+    );
+  }
+
   return (
     <section className="px-4 py-6">
       <div className="container-xl lg:container m-auto">
-        {properties.length === 0 ? (
-          <p>No properties found</p>
-        ) : (
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            {properties.map((property) => (
-              <motion.div key={property._id} variants={item}>
-                <PropertyCard key={property._id} property={property} />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
+        <PropertiesGrid properties={properties} />
       </div>
     </section>
   );

@@ -1,36 +1,20 @@
-"use client";
-
 import React from "react";
-import properties from "@/properties.json";
-import PropertyCard from "./PropertyCard";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import PropertyGrid from "./PropertyGrid";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2, // delay between each card
-    },
-  },
-};
+const HomeProperties = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Failed to fetch properties");
 
-const item = {
-  hidden: { x: -60, opacity: 0 }, // start from the left side
-  show: {
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+  const data = await res.json();
 
-const HomeProperties = () => {
-  const recentProperties = React.useMemo(() => {
-    return [...properties]
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-      .slice(0, 3);
-  }, []);
+  const properties = data.properties || [];
+
+  const recentProperties = [...properties]
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 3);
 
   return (
     <>
@@ -40,24 +24,14 @@ const HomeProperties = () => {
             Recent Properties
           </h2>
 
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {!recentProperties || recentProperties.length === 0 ? (
-              <p>No Properties Found</p>
-            ) : (
-              recentProperties.map((property) => (
-                <motion.article key={property._id} variants={item}>
-                  <PropertyCard property={property} />
-                </motion.article>
-              ))
-            )}
-          </motion.div>
+          {recentProperties.length === 0 ? (
+            <p>No Properties Found</p>
+          ) : (
+            <PropertyGrid properties={recentProperties} />
+          )}
         </div>
       </section>
+
       <section className="m-auto max-w-lg my-10 px-6">
         <Link
           href="/properties"
