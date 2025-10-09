@@ -1,14 +1,8 @@
 import PropertiesGrid from "@/components/PropertyGrid";
+import { fetchProperties } from "@/utils/request";
 
 const PropertiesPage = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) throw new Error("Failed to fetch properties");
-
-  const data = await res.json();
-  const properties = data.properties || [];
+  const properties = await fetchProperties();
 
   //sort properties by date
   properties.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

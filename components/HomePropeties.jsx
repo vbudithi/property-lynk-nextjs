@@ -1,16 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import PropertyGrid from "./PropertyGrid";
+import { fetchProperties } from "@/utils/request";
 
 const HomeProperties = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`, {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error("Failed to fetch properties");
-
-  const data = await res.json();
-
-  const properties = data.properties || [];
+  const properties = await fetchProperties();
 
   const recentProperties = [...properties]
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
