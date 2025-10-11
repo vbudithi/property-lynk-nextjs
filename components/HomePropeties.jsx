@@ -4,9 +4,8 @@ import PropertyGrid from "./PropertyGrid";
 import { fetchProperties } from "@/utils/request";
 
 const HomeProperties = async () => {
-  const properties = await fetchProperties();
-
-  const recentProperties = [...properties]
+  const data = await fetchProperties();
+  const recentProperties = data.properties
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 3);
 

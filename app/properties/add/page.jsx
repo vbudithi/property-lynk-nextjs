@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
 
 const PropertyAddPage = () => {
-  return (
-    <div>PropertyAddPage</div>
-  )
-}
+  const { id } = useParams();
 
-export default PropertyAddPage
+  const [property, setProperty] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {}, [id, property]);
+
+  return <div>PropertyAddPage</div>;
+};
+
+export default PropertyAddPage;

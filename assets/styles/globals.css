@@ -1,10 +1,27 @@
 @import "tailwindcss";
 
-:root {
-  --font-brand: system-ui;
-}
-
 .font-brand {
   font-family: var(--font-brand), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+@property --font-brand {
+  syntax: "<string>";
+  inherits: false;
+  initial-value: "Poppins";
+}
+
+:root {
+  --font-brand: "Poppins", ui-sans-serif, system-ui;
+}
+
+@layer utilities {
+  .font-brand {
+    font-family: var(--font-brand);
+  }
+  .grid-cols-70-30 {
+    grid-template-columns: 70% 28%;
+  }
+  .debug-border {
+    border: 2px solid red;
+  }
 }
