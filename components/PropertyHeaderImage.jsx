@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const PropertyHeaderImage = ({ image }) => {
+const PropertyHeaderImage = ({ image, priority }) => {
   return (
     <section>
       <div className="container-xl m-auto">
@@ -8,10 +8,11 @@ const PropertyHeaderImage = ({ image }) => {
           <div className="relative h-[400px] w-full">
             <Image
               src={`/images/properties/${image}`}
-              alt=""
+              alt="main property image"
               fill
+              priority={false}
+              sizes="100vw"
               className="object-cover"
-              priority
             />
           </div>
         </div>

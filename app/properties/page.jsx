@@ -4,9 +4,6 @@ import { fetchProperties } from "@/utils/request";
 const PropertiesPage = async () => {
   const data = await fetchProperties();
 
-  // //sort properties by date
-  // data.properties.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
   const allProperties = data.properties.sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
