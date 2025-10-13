@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const PropertyHeaderImage = ({ image, priority }) => {
+const PropertyHeaderImage = ({ image }) => {
   return (
     <section>
       <div className="container-xl m-auto">

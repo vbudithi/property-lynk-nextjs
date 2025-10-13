@@ -20,6 +20,13 @@ const PropertyPage = async ({ params }) => {
 
   const property = await Property.findById(id).lean();
 
+  // ✅ Normalize here
+  property.rates = {
+    nightly: Number(property.rates?.nightly) || null,
+    weekly: Number(property.rates?.weekly) || null,
+    monthly: Number(property.rates?.monthly) || null,
+  };
+
   if (!property) {
     return (
       <h1 className="text-center text-2xl font-bold mt-10">
