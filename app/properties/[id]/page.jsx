@@ -20,7 +20,7 @@ const PropertyPage = async ({ params }) => {
 
   const property = await Property.findById(id).lean();
 
-  // ✅ Normalize here
+  //  Convert rate values (including strings) to numbers or null if invalid
   property.rates = {
     nightly: Number(property.rates?.nightly) || null,
     weekly: Number(property.rates?.weekly) || null,
@@ -45,4 +45,5 @@ const PropertyPage = async ({ params }) => {
     </>
   );
 };
+
 export default PropertyPage;

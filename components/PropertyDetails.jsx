@@ -189,10 +189,7 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
             id="map"
             aria-label="Map placeholder"
             className="h-64 w-full rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden"
-          >
-            {/* subtle shimmer */}
-            <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-          </div>
+          ></div>
         </div>
       </div>
     </main>

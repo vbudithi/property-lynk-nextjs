@@ -10,7 +10,7 @@ const PropertySections = React.memo(function PropertySections({ property }) {
     <>
       {/* Back link */}
       <section>
-        <div className="container m-auto py-6 px-6">
+        <div className="container m-auto py-6 px-16">
           <Link
             href="/"
             className="text-blue-500 hover:text-blue-600 flex items-center"
