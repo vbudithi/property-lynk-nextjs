@@ -6,7 +6,7 @@ import { fetchProperties } from "@/utils/request";
 const HomeProperties = async () => {
   const data = await fetchProperties();
   const recentProperties = data.properties
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
 
   return (

@@ -15,7 +15,7 @@ const container = {
 
 const item = {
   hidden: { y: -50, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } },
+  show: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
 const PropertyGrid = ({ properties }) => {

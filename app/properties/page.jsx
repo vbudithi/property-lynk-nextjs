@@ -4,8 +4,18 @@ import { fetchProperties } from "@/utils/request";
 const PropertiesPage = async () => {
   const data = await fetchProperties();
 
+  // 🛡 Defensive check BEFORE accessing data.properties
+  if (!data || !Array.isArray(data.properties)) {
+    console.error("Failed to fetch or parse property data.");
+    return (
+      <section className="px-4 py-6 text-center text-gray-500">
+        <p>No properties found</p>
+      </section>
+    );
+  }
+
   const allProperties = data.properties.sort(
-    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
   if (!Array.isArray(allProperties) || allProperties.length === 0) {

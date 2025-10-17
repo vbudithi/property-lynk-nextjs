@@ -31,6 +31,7 @@ const PropertyCard = ({ property }) => {
         width={0}
         sizes="100vw"
         className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
+        priority
       />
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">

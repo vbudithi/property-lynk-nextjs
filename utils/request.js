@@ -9,7 +9,6 @@ async function fetchProperties() {
 
   try {
     const res = await fetch(`${apiDomain}/properties`);
-
     if (!res.ok) {
       throw new Error(`Failed to fetch properties`);
     }

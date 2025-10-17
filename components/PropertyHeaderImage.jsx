@@ -10,7 +10,7 @@ const PropertyHeaderImage = ({ image }) => {
               src={`/images/properties/${image}`}
               alt="main property image"
               fill
-              priority={false}
+              priority
               sizes="100vw"
               className="object-cover"
             />
