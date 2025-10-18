@@ -2,14 +2,15 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section className="bg-blue-700 py-20 mb-4">
+    <section className="bg-gradient-to-r from-blue-500 to-blue-900 py-20 mb-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-            Find The Perfect Rental
+            Find Your Perfect Rental
           </h1>
           <p className="my-4 text-xl text-white">
-            Discover the perfect property that suits your needs.
+            Discover the ideal property that matches your lifestyle. Browse
+            hundreds of listings and find your dream home today.
           </p>
         </div>
         <form className="mt-3 mx-auto max-w-2xl w-full flex flex-col md:flex-row items-center">

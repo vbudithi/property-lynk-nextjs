@@ -7,11 +7,16 @@ import Link from "next/link";
 import logo from "@/assets/images/logo_prop.png";
 import profileDefault from "@/assets/images/profile.png";
 import { FcGoogle } from "react-icons/fc";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session } = useSession();
+  const profileImage = session?.user.image;
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [providers, setProviders] = useState(null);
+
   const pathname = usePathname();
 
   useEffect(() => {
@@ -20,8 +25,19 @@ const Navbar = () => {
     setIsProfileMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+    setAuthProviders();
+  }, []);
+
+  console.log(session);
+  console.log(profileImage);
+
   return (
-    <nav className="relative bg-gradient-to-r from-blue-400 to-blue-600 border-b border-white/10 ">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-blue-500 to-blue-900">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-20 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
@@ -55,12 +71,9 @@ const Navbar = () => {
           <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
             {/* <!-- Logo --> */}
             <Link className="flex flex-shrink-0 items-center" href="/">
-              <Image className="h-12 w-auto" src={logo} alt="PropertyLynk" />
+              <Image className="h-15 w-auto" src={logo} alt="PropertyLynk" />
 
-              <span
-                className="hidden md:block text-white text-2xl font-bold ml-2 
-  transition-all duration-500 hover:bg-gradient-to-r hover:from-orange-400 hover:to-yellow-400 hover:bg-clip-text hover:text-transparent"
-              >
+              <span className="hidden md:block text-2xl font-bold ml-2 bg-gradient-to-r from-orange-400 to-yellow-400 hover:from-yellow-300 hover:to-orange-500 bg-clip-text text-transparent transition-all duration-300 cursor-pointer">
                 PropertyLynk
               </span>
             </Link>
@@ -85,7 +98,7 @@ const Navbar = () => {
                 >
                   Properties
                 </Link>
-                {!isLoggedIn && (
+                {session && (
                   <Link
                     href="/properties/add"
                     className={`text-white rounded-md px-3 py-2 ${
@@ -102,20 +115,28 @@ const Navbar = () => {
           </div>
           {/* 
           <!-- Right Side Menu (Logged Out) --> */}
-          {isLoggedIn && (
+          {!session && (
             <div className="hidden md:block md:ml-6">
               <div className="flex items-center">
-                <button className="flex items-center bg-amber-300 text-black hover:bg-amber-400 rounded-md px-3 py-2">
-                  <FcGoogle size={20} className="mr-2" />
-                  <span>Login or Register</span>
-                </button>
+                {providers &&
+                  Object.values(providers).map((provider, index) => (
+                    <button
+                      onClick={() => signIn(provider.id)}
+                      key={index}
+                      className="flex items-center bg-amber-300 text-black
+                      hover:bg-amber-400 rounded-md px-3 py-2 cursor-pointer"
+                    >
+                      <FcGoogle size={20} className="mr-2" />
+                      <span>Login or Register</span>
+                    </button>
+                  ))}
               </div>
             </div>
           )}
 
           {/* 
           <!-- Right Side Menu (Logged In) --> */}
-          {!isLoggedIn && (
+          {session && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
               <Link href="/messages" className="relative group">
                 <button
@@ -159,8 +180,10 @@ const Navbar = () => {
                     <span className="sr-only">Open user menu</span>
                     <Image
                       className="h-8 w-8 rounded-full"
-                      src={profileDefault}
+                      src={profileImage || profileDefault}
                       alt=""
+                      width={40}
+                      height={40}
                     />
                   </button>
                 </div>
@@ -235,7 +258,7 @@ const Navbar = () => {
             >
               Properties
             </Link>
-            {isLoggedIn && (
+            {!session && (
               <Link
                 href="/properties/add"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -245,16 +268,18 @@ const Navbar = () => {
                 Add Property
               </Link>
             )}
-            {isLoggedIn && (
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-1 flex items-center rounded-md px-3 py-2
+            {!session &&
+              providers &&
+              Object.values(providers).map((provider, index) => {
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="mt-1 flex items-center rounded-md px-3 py-2
                      text-white bg-gray-700 hover:bg-gray-900"
-              >
-                <FcGoogle size={20} className="mr-2" />
-                <span>Login or Register</span>
-              </button>
-            )}
+                >
+                  <FcGoogle size={20} className="mr-2" />
+                  <span>Login or Register</span>
+                </button>;
+              })}
           </div>
         </div>
       )}
