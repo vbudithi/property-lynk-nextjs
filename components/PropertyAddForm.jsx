@@ -4,6 +4,7 @@ import { FaUpload } from "react-icons/fa";
 
 const PropertyAddForm = () => {
   const [mounted, setMounted] = useState(false);
+  const [imageError, setImageError] = useState("");
   const [fields, setFields] = useState({
     type: "Apartment",
     name: "",
@@ -73,21 +74,55 @@ const PropertyAddForm = () => {
 
   const handleImageChange = (e) => {
     const { files } = e.target;
+    if (!files || files.length === 0) return;
+    const newFiles = Array.from(files).filter((file) => file.name !== "");
+
+    // prevent duplicates based on file name
+    const existingNames = fields.images.map((img) => img.name);
+    const uniqueFiles = newFiles.filter(
+      (file) => !existingNames.includes(file.name)
+    );
+
+    //duplicate files
+    const duplicateImage = newFiles.filter((file) =>
+      existingNames.includes(file.name)
+    );
 
     //clone the image array
-    const updatedImages = [...fields.images];
+    const combinedImages = [...fields.images, ...uniqueFiles];
 
-    //adding the value to the array
-    for (const file of files) {
-      updatedImages.push(file);
+    let errorMessages = [];
+    //Error: images exceed limit
+    if (combinedImages.length > 4) {
+      console.log("Too many images");
+
+      errorMessages.push("You can only upload up to 4 images.");
     }
+    if (duplicateImage.length > 0) {
+      console.log("Duplicate image");
+
+      errorMessages.push("You can't upload duplicate images.");
+    }
+    if (errorMessages.length > 0) {
+      setImageError(errorMessages.join(" "));
+      return;
+    }
+    // No errors — update state
     //update state with updated images array
+    const updatedImages = combinedImages.slice(0, 4);
+
     setFields((prevFields) => ({ ...prevFields, images: updatedImages }));
+    setImageError("");
   };
 
   return (
     mounted && (
-      <form>
+      <form
+        action="/api/properties"
+        method="post"
+        encType="multipart/form-data"
+        className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md"
+      >
         <h2 className="text-3xl text-center font-semibold mb-6">
           Add Property
         </h2>
@@ -491,7 +526,7 @@ const PropertyAddForm = () => {
           <input
             type="text"
             id="seller_name"
-            name="seller_info.name."
+            name="seller_info.name"
             className="border rounded w-full py-2 px-3"
             placeholder="Name"
             required
@@ -557,8 +592,38 @@ const PropertyAddForm = () => {
               multiple
               onChange={handleImageChange}
               className="absolute inset-0 opacity-0 cursor-pointer"
+              required
             />
           </div>
+          {fields.images.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-4">
+              {fields.images.map((image, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`preview-${index}`}
+                    className="w-32 h-32 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = fields.images.filter(
+                        (_, i) => i !== index
+                      );
+                      setFields((prev) => ({ ...prev, images: updated }));
+                    }}
+                    className="absolute top-1 right-1 bg-white text-gray-700 border border-gray-300 rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {imageError && (
+            <p className="text-red-500 text-sm mt-2">{imageError}</p>
+          )}
         </div>
 
         <div>
