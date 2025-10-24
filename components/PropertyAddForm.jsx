@@ -6,21 +6,21 @@ const PropertyAddForm = () => {
   const [mounted, setMounted] = useState(false);
   const [imageError, setImageError] = useState("");
   const [fields, setFields] = useState({
-    type: "Apartment",
+    type: "",
     name: "",
     description: "",
     location: {
       street: "",
-      city: "Test city",
-      state: "Test State",
+      city: "",
+      state: "",
       zipcode: "",
     },
-    beds: 3,
-    baths: 2,
-    square_feet: 1800,
-    amenities: ["Free Parking"],
-    rates: { nightly: 0, monthly: 2000, weekly: 0 },
-    seller_info: { name: "", email: "test@test.com", phone: "" },
+    beds: 0,
+    baths: 0,
+    square_feet: 0,
+    amenities: [""],
+    rates: { nightly: 0, monthly: 0, weekly: 0 },
+    seller_info: { name: "", email: "", phone: "" },
     images: [],
   });
 
@@ -134,7 +134,7 @@ const PropertyAddForm = () => {
           <select
             id="type"
             name="type"
-            className="border rounded w-full py-2 px-3"
+            className="border rounded w-full py-2 px-3 cursor-pointer"
             required
             value={fields.type}
             onChange={handleChange}
@@ -293,7 +293,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Wifi")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_wifi">Wifi</label>
+              <label htmlFor="amenity_wifi" className="cursor-pointer">
+                Wifi
+              </label>
             </div>
             <div>
               <input
@@ -305,7 +307,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Full Kitchen")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_kitchen">Full kitchen</label>
+              <label htmlFor="amenity_kitchen" className="cursor-pointer">
+                Full kitchen
+              </label>
             </div>
             <div>
               <input
@@ -317,7 +321,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Washer & Dryer")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_washer_dryer">Washer & Dryer</label>
+              <label htmlFor="amenity_washer_dryer" className="cursor-pointer">
+                Washer & Dryer
+              </label>
             </div>
             <div>
               <input
@@ -329,7 +335,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Free Parking")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_free_parking">Free Parking</label>
+              <label htmlFor="amenity_free_parking" className="cursor-pointer">
+                Free Parking
+              </label>
             </div>
             <div>
               <input
@@ -341,7 +349,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Swimming Pool")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_pool">Swimming Pool</label>
+              <label htmlFor="amenity_pool" className="cursor-pointer">
+                Swimming Pool
+              </label>
             </div>
             <div>
               <input
@@ -353,7 +363,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Hot Tub")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_hot_tub">Hot Tub</label>
+              <label htmlFor="amenity_hot_tub" className="cursor-pointer">
+                Hot Tub
+              </label>
             </div>
             <div>
               <input
@@ -365,7 +377,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("24/7 Security")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_24_7_security">24/7 Security</label>
+              <label htmlFor="amenity_24_7_security" className="cursor-pointer">
+                24/7 Security
+              </label>
             </div>
             <div>
               <input
@@ -377,7 +391,10 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Wheelchair Accessible")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_wheelchair_accessible">
+              <label
+                htmlFor="amenity_wheelchair_accessible"
+                className="cursor-pointer"
+              >
                 Wheelchair Accessible
               </label>
             </div>
@@ -391,7 +408,12 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Elevator Access")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_elevator_access">Elevator Access</label>
+              <label
+                htmlFor="amenity_elevator_access"
+                className="cursor-pointer"
+              >
+                Elevator Access
+              </label>
             </div>
             <div>
               <input
@@ -403,7 +425,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Dishwasher")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_dishwasher">Dishwasher</label>
+              <label htmlFor="amenity_dishwasher" className="cursor-pointer">
+                Dishwasher
+              </label>
             </div>
             <div>
               <input
@@ -429,7 +453,12 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Air Conditioning")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_air_conditioning">Air Conditioning</label>
+              <label
+                htmlFor="amenity_air_conditioning"
+                className="cursor-pointer"
+              >
+                Air Conditioning
+              </label>
             </div>
             <div>
               <input
@@ -441,7 +470,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Balcony/Patio")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_balcony_patio">Balcony/Patio</label>
+              <label htmlFor="amenity_balcony_patio" className="cursor-pointer">
+                Balcony/Patio
+              </label>
             </div>
             <div>
               <input
@@ -452,7 +483,10 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Smart TV")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_smart_tv">Smart TV</label>
+              <label htmlFor="amenity_smart_tv" className="cursor-pointer">
+                {" "}
+                Smart TV
+              </label>
             </div>
             <div>
               <input
@@ -464,7 +498,9 @@ const PropertyAddForm = () => {
                 checked={fields.amenities.includes("Coffee Maker")}
                 onChange={handleAmenitiesChange}
               />
-              <label htmlFor="amenity_coffee_maker">Coffee Maker</label>
+              <label htmlFor="amenity_coffee_maker" className="cursor-pointer">
+                Coffee Maker
+              </label>
             </div>
           </div>
         </div>
@@ -628,7 +664,7 @@ const PropertyAddForm = () => {
 
         <div>
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline cursor-pointer"
             type="submit"
           >
             Add Property

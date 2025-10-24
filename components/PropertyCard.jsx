@@ -20,6 +20,7 @@ const PropertyCard = ({ property }) => {
     } else if (rates.nightly) {
       return `${rates.nightly.toLocaleString()}/night`;
     }
+    return "N/A";
   };
 
   return (
