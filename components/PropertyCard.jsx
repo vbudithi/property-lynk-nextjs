@@ -25,19 +25,24 @@ const PropertyCard = ({ property }) => {
 
   return (
     <div className="rounded-xl border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-500 relative overflow-hidden group bg-white">
-      <Image
-        src={`/images/properties/${property.images[0]}`}
-        alt=""
-        height={0}
-        width={0}
-        sizes="100vw"
-        className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
-        priority
-      />
+      <Link href={`/properties/${property._id}`}>
+        <Image
+          src={`/images/properties/${property.images[0]}`}
+          alt=""
+          height={0}
+          width={0}
+          sizes="100vw"
+          className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
+          priority
+        />
+      </Link>
+
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">
           <div className="text-gray-600">{property.type}</div>
-          <h3 className="text-xl font-bold">{property.name}</h3>
+          <Link href={`/properties/${property._id}`}>
+            <h3 className="text-xl font-bold">{property.name}</h3>
+          </Link>
         </div>
         <h3 className="absolute top-3 right-3 bg-white/90 px-4 py-2 rounded-lg text-blue-600 font-bold shadow transform transition-transform duration-500 group-hover:scale-105">
           ${getRateDisplay()}

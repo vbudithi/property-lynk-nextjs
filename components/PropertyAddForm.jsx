@@ -519,7 +519,7 @@ const PropertyAddForm = () => {
                 id="weekly_rate"
                 name="rates.weekly"
                 className="border rounded w-full py-2 px-3"
-                value={fields.rates.weekly}
+                value={fields.rates.weekly ?? ""}
                 onChange={handleChange}
               />
             </div>
