@@ -7,7 +7,7 @@ const PropertyHeaderImage = ({ image }) => {
         <div className="grid grid-cols-1">
           <div className="relative h-[400px] w-full">
             <Image
-              src={`/images/properties/${image}`}
+              src={image}
               alt="main property image"
               fill
               priority

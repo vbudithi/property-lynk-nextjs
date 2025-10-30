@@ -27,7 +27,7 @@ const PropertyCard = ({ property }) => {
     <div className="rounded-xl border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-500 relative overflow-hidden group bg-white">
       <Link href={`/properties/${property._id}`}>
         <Image
-          src={`/images/properties/${property.images[0]}`}
+          src={property.images[0]}
           alt=""
           height={0}
           width={0}
