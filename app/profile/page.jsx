@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import profileDefault from "@/assets/images/profile.png";
 import { ClipLoader } from "react-spinners";
-
+import { toast } from "react-hot-toast";
 const ProfilePage = () => {
   const { data: session, status } = useSession();
 
@@ -47,7 +47,35 @@ const ProfilePage = () => {
     }
   }, [session]);
 
-  const handleDeleteProperty = () => {};
+  const handleDeleteProperty = async (propertyId) => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this property? This action cannot be undone."
+      )
+    ) {
+      console.log("Deleting property with id:", propertyId);
+    } else return;
+
+    try {
+      const res = await fetch(`api/properties/${propertyId}`, {
+        method: "DELETE",
+      });
+      if (res.status === 200) {
+        const updatedProperties = properties.filter(
+          (property) => property._id !== propertyId
+        );
+        setProperties(updatedProperties);
+        toast.success("Property deleted successfully", {
+          className: "toast-progress",
+        });
+      } else {
+        toast.error("Failed to delete property");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <section className="bg-blue-50">
@@ -117,13 +145,13 @@ const ProfilePage = () => {
                     <div className="mt-2">
                       <Link
                         href={`properties/${property._id}/edit`}
-                        className="bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600"
+                        className="bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600 cursor-pointer"
                       >
                         Edit
                       </Link>
                       <button
                         onClick={() => handleDeleteProperty(property._id)}
-                        className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
+                        className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 cursor-pointer"
                         type="button"
                       >
                         Delete

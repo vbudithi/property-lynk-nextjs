@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-.font-brand {
-  font-family: var(--font-brand), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial;
-}
 @property --font-brand {
   syntax: "<string>";
   inherits: false;
@@ -16,12 +12,28 @@
 
 @layer utilities {
   .font-brand {
-    font-family: var(--font-brand);
+    font-family: var(--font-brand), ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
-  .grid-cols-70-30 {
-    grid-template-columns: 70% 28%;
+}
+
+/*Toast progress bar animation for auto-dismiss */
+.toast-progress::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: #10b981;
+  animation: shrink 3s linear forwards;
+}
+
+@keyframes shrink {
+  from {
+    width: 100%;
   }
-  .debug-border {
-    border: 2px solid red;
+  to {
+    width: 0%;
   }
 }

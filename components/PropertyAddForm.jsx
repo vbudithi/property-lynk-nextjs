@@ -1,10 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { FaUpload } from "react-icons/fa";
 
+import { toast } from "react-hot-toast";
+
 const PropertyAddForm = () => {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [imageError, setImageError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [fields, setFields] = useState({
     type: "",
     name: "",
@@ -27,6 +32,40 @@ const PropertyAddForm = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    console.time("form-submit");
+
+    const formData = new FormData(e.target);
+    const toastId = toast.loading("Adding property...", {
+      className: "toast-progress",
+    });
+    try {
+      const res = await fetch(`/api/properties`, {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log("API response status:", res.status);
+      if (res.status === 200) {
+        toast.success("Property added successfully", {
+          id: toastId,
+          className: "toast-progress",
+        });
+        router.push("/properties");
+      } else {
+        toast.error("Failed to add property", {
+          className: "toast-progress",
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to add property", { className: "toast-progress" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -107,8 +146,8 @@ const PropertyAddForm = () => {
       setImageError(errorMessages.join(" "));
       return;
     }
-    // No errors — update state
-    //update state with updated images array
+
+    // If no errors — update the state with updated images array
     const updatedImages = combinedImages.slice(0, 4);
 
     setFields((prevFields) => ({ ...prevFields, images: updatedImages }));
@@ -118,8 +157,7 @@ const PropertyAddForm = () => {
   return (
     mounted && (
       <form
-        action="/api/properties"
-        method="post"
+        onSubmit={handleSubmit}
         encType="multipart/form-data"
         className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md"
       >
@@ -150,7 +188,7 @@ const PropertyAddForm = () => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2">
-            Listing Name
+            Listing Name*
           </label>
           <input
             type="text"
@@ -182,7 +220,9 @@ const PropertyAddForm = () => {
         </div>
 
         <div className="mb-4 bg-blue-50 p-4">
-          <label className="block text-gray-700 font-bold mb-2">Location</label>
+          <label className="block text-gray-700 font-bold mb-2">
+            Location*
+          </label>
           <input
             type="text"
             id="street"
@@ -557,7 +597,7 @@ const PropertyAddForm = () => {
             htmlFor="seller_name"
             className="block text-gray-700 font-bold mb-2"
           >
-            Seller Name
+            Seller Name*
           </label>
           <input
             type="text"
@@ -575,7 +615,7 @@ const PropertyAddForm = () => {
             htmlFor="seller_email"
             className="block text-gray-700 font-bold mb-2"
           >
-            Seller Email
+            Seller Email*
           </label>
           <input
             type="email"
@@ -611,7 +651,7 @@ const PropertyAddForm = () => {
             htmlFor="images"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            📷 Upload Images{" "}
+            📷 Upload Images*{" "}
             <span className="text-xs text-gray-500">(Max 4)</span>
           </label>
 
@@ -664,10 +704,11 @@ const PropertyAddForm = () => {
 
         <div>
           <button
+            disabled={loading}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline cursor-pointer"
             type="submit"
           >
-            Add Property
+            {loading ? "Submitting..." : "Add Property"}
           </button>
         </div>
       </form>
