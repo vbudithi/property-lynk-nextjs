@@ -8,7 +8,7 @@ import profileDefault from "@/assets/images/profile.png";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 const ProfilePage = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const profileImage = session?.user?.image;
   const profileName = session?.user?.name;
@@ -133,7 +133,11 @@ const ProfilePage = () => {
                       />
                     </Link>
                     <div className="mt-2">
-                      <p className="text-lg font-semibold">{property.name}</p>
+                      <Link href={`/properties/${property._id}`}>
+                        <p className="text-lg font-semibold hover:underline">
+                          {property.name}
+                        </p>
+                      </Link>
                       <p className="text-gray-600">
                         {property.location?.street} {property.location?.city},{" "}
                         {property.location?.state} {property.location?.zipcode}

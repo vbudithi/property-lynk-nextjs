@@ -17,6 +17,8 @@ export async function GET(_req, { params }) {
 
     const property = await Property.findById(id).lean();
 
+    console.log("Fetched property:", property);
+
     if (!property) {
       return NextResponse.json(
         { error: "Property not found" },
@@ -76,3 +78,70 @@ export async function DELETE(_req, { params }) {
     );
   }
 }
+
+// UPDATE /api/properties/:id
+
+export const PUT = async (request, { params }) => {
+  try {
+    await connectDB();
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response("UserID is required", { status: 401 });
+    }
+
+    const { id } = params;
+    const { userId } = sessionUser;
+    const formData = await request.formData();
+
+    //Access all values from amenities and images fields
+    const amenities = formData.getAll("amenities");
+
+    //get Property to update
+    const existingProperty = await Property.findById(id).lean();
+    if (!existingProperty) {
+      return new Response("Property not found", { status: 404 });
+    }
+    //check if the logged in user is the owner of the property
+    if (existingProperty.owner.toString() !== userId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    //create all the  propertyData object for database
+    const propertyData = {
+      type: formData.get("type"),
+      name: formData.get("name"),
+      description: formData.get("description") || "",
+      location: {
+        street: formData.get("location.street"),
+        city: formData.get("location.city"),
+        state: formData.get("location.state"),
+        zipcode: formData.get("location.zipcode"),
+      },
+      beds: formData.get("beds"),
+      baths: formData.get("baths"),
+      square_feet: formData.get("square_feet"),
+      amenities,
+      rates: {
+        nightly: formData.get("rates.nightly"),
+        weekly: formData.get("rates.weekly"),
+        monthly: formData.get("rates.monthly"),
+      },
+      seller_info: {
+        name: formData.get("seller_info.name"),
+        email: formData.get("seller_info.email"),
+        phone: formData.get("seller_info.phone"),
+      },
+      owner: userId,
+    };
+
+    //update property in database
+    const updatedProperty = await Property.findByIdAndUpdate(id, propertyData);
+
+    console.log("Property Updated:", id);
+
+    return new Response(JSON.stringify(updatedProperty), { status: 200 });
+  } catch (error) {
+    return new Response("Failed to update property", { status: 500 });
+  }
+};

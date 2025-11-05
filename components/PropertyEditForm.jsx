@@ -1,15 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { FaUpload } from "react-icons/fa";
-
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { fetchProperty } from "@/utils/request";
 
-const PropertyAddForm = () => {
+const PropertyEditForm = () => {
+  const { id } = useParams();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [imageError, setImageError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [fields, setFields] = useState({
     type: "",
     name: "",
@@ -26,47 +25,23 @@ const PropertyAddForm = () => {
     amenities: [""],
     rates: { nightly: 0, monthly: 0, weekly: 0 },
     seller_info: { name: "", email: "", phone: "" },
-    images: [],
   });
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    console.time("form-submit");
-
-    try {
-      setLoading(true);
-      const formData = new FormData(e.target);
-      const toastId = toast.loading("Adding property...", {
-        className: "toast-progress",
-      });
-      const res = await fetch(`/api/properties`, {
-        method: "POST",
-        body: formData,
-      });
-
-      console.log("API response status:", res.status);
-      if (res.status === 200) {
-        toast.success("Property added successfully", {
-          id: toastId,
-          className: "toast-progress",
-        });
-        router.push("/properties");
-      } else {
-        toast.error("Failed to add property", {
-          className: "toast-progress",
-        });
+    const fetchPropertyData = async () => {
+      try {
+        const propertyData = await fetchProperty(id);
+        console.log("Raw propertyData:", JSON.stringify(propertyData, null, 2));
+        setFields(propertyData);
+      } catch (error) {
+        console.error("Error fetching property data:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error("Failed to add property", { className: "toast-progress" });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchPropertyData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -112,58 +87,54 @@ const PropertyAddForm = () => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const { files } = e.target;
-    if (!files || files.length === 0) return;
-    const newFiles = Array.from(files).filter((file) => file.name !== "");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // prevent duplicates based on file name
-    const existingNames = fields.images.map((img) => img.name);
-    const uniqueFiles = newFiles.filter(
-      (file) => !existingNames.includes(file.name)
-    );
+    try {
+      setLoading(true);
+      const formData = new FormData(e.target);
+      const toastId = toast.loading("Editing property...", {
+        className: "toast-progress",
+      });
+      const res = await fetch(`/api/properties/${id}`, {
+        method: "PUT",
+        body: formData,
+      });
 
-    //duplicate files
-    const duplicateImage = newFiles.filter((file) =>
-      existingNames.includes(file.name)
-    );
-
-    //clone the image array
-    const combinedImages = [...fields.images, ...uniqueFiles];
-
-    let errorMessages = [];
-    //Error: images exceed limit
-    if (combinedImages.length > 4) {
-      console.log("Too many images");
-
-      errorMessages.push("You can only upload up to 4 images.");
+      console.log("API response status:", res.status);
+      if (res.status === 200) {
+        toast.success("Property edited successfully", {
+          id: toastId,
+          className: "toast-progress",
+        });
+        router.push(`/properties/${id}`);
+      } else if (res.status === 401 || res.status === 403) {
+        toast.error("Permission denied", {
+          className: "toast-progress",
+        });
+      } else {
+        toast.error("Failed to edit property", {
+          className: "toast-progress",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to edit property", { className: "toast-progress" });
+    } finally {
+      setLoading(false);
     }
-    if (duplicateImage.length > 0) {
-      console.log("Duplicate image");
-
-      errorMessages.push("You can't upload duplicate images.");
-    }
-    if (errorMessages.length > 0) {
-      setImageError(errorMessages.join(" "));
-      return;
-    }
-
-    // If no errors — update the state with updated images array
-    const updatedImages = combinedImages.slice(0, 4);
-
-    setFields((prevFields) => ({ ...prevFields, images: updatedImages }));
-    setImageError("");
   };
 
   return (
-    mounted && (
+    mounted &&
+    !loading && (
       <form
         onSubmit={handleSubmit}
         encType="multipart/form-data"
         className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md"
       >
         <h2 className="text-3xl text-center font-semibold mb-6">
-          Add Property
+          Edit Property
         </h2>
 
         <div className="mb-4">
@@ -646,74 +617,17 @@ const PropertyAddForm = () => {
             onChange={handleChange}
           />
         </div>
-
-        <div className="mb-6">
-          <label
-            htmlFor="images"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            📷 Upload Images*{" "}
-            <span className="text-xs text-gray-500">(Max 4)</span>
-          </label>
-
-          <div className="relative flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition">
-            <FaUpload className="text-gray-500 text-xl mr-2" />
-            <span className="text-gray-600 text-sm">
-              Choose images to upload
-            </span>
-            <input
-              type="file"
-              id="images"
-              name="images"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              required
-            />
-          </div>
-          {fields.images.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-4">
-              {fields.images.map((image, index) => (
-                <div key={index} className="relative group">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt={`preview-${index}`}
-                    className="w-32 h-32 object-cover rounded border"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updated = fields.images.filter(
-                        (_, i) => i !== index
-                      );
-                      setFields((prev) => ({ ...prev, images: updated }));
-                    }}
-                    className="absolute top-1 right-1 bg-white text-gray-700 border border-gray-300 rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {imageError && (
-            <p className="text-red-500 text-sm mt-2">{imageError}</p>
-          )}
-        </div>
-
         <div>
           <button
             disabled={loading}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline cursor-pointer"
             type="submit"
           >
-            {loading ? "Submitting..." : "Add Property"}
+            {loading ? "Submitting..." : "Update Property"}
           </button>
         </div>
       </form>
     )
   );
 };
-export default PropertyAddForm;
+export default PropertyEditForm;
