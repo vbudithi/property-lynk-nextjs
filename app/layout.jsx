@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import { League_Spartan } from "next/font/google";
 import "@/assets/styles/globals.css";
 import AuthProvider from "@/components/AuthProvider";
-import { Toaster } from "react-hot-toast";
+import Providers from "@/providers";
 
 export const metadata = {
   title: "PropertyLynk | Find  the Perfect Rental",
@@ -17,41 +17,11 @@ const MainLayout = ({ children }) => {
     <AuthProvider>
       <html lang="en" className={`${leagueSpartan.variable}`}>
         <body className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              duration: 5000,
-              style: {
-                background: "#1f2937",
-                color: "#fff",
-                fontSize: "14px",
-                marginTop: "4rem",
-              },
-              className: "relative overflow-hidden",
-
-              success: {
-                iconTheme: {
-                  primary: "#10b981",
-                  secondary: "#fff",
-                },
-              },
-              error: {
-                iconTheme: {
-                  primary: "#ef4444",
-                  secondary: "#fff",
-                },
-              },
-              loading: {
-                iconTheme: {
-                  primary: "#ef4444",
-                  secondary: "#fff",
-                },
-              },
-            }}
-          />
+          <Providers>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </Providers>
         </body>
       </html>
     </AuthProvider>

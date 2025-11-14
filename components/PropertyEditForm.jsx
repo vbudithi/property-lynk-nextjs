@@ -93,17 +93,15 @@ const PropertyEditForm = () => {
     try {
       setLoading(true);
       const formData = new FormData(e.target);
-      const toastId = toast.loading("Editing property...", {
+      const toastId = toast.loading("Updating the property...", {
         className: "toast-progress",
       });
       const res = await fetch(`/api/properties/${id}`, {
         method: "PUT",
         body: formData,
       });
-
-      console.log("API response status:", res.status);
       if (res.status === 200) {
-        toast.success("Property edited successfully", {
+        toast.success("Property updated successfully", {
           id: toastId,
           className: "toast-progress",
         });
@@ -113,13 +111,15 @@ const PropertyEditForm = () => {
           className: "toast-progress",
         });
       } else {
-        toast.error("Failed to edit property", {
+        toast.error("Failed to update the property", {
           className: "toast-progress",
         });
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to edit property", { className: "toast-progress" });
+      toast.error("Failed to update the property", {
+        className: "toast-progress",
+      });
     } finally {
       setLoading(false);
     }

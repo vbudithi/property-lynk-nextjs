@@ -19,6 +19,7 @@ const PropertyPage = async ({ params }) => {
   }
 
   const property = await Property.findById(id).lean();
+  console.log("Property fetched in page:", property);
 
   //  Convert rate values (including strings) to numbers or null if invalid
   property.rates = {
@@ -37,6 +38,7 @@ const PropertyPage = async ({ params }) => {
 
   // Convert to plain JSON-safe object
   const propertyData = JSON.parse(JSON.stringify(property));
+  console.log("Property data prepared for client:", propertyData);
 
   return (
     <>

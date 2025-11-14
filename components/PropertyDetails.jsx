@@ -8,6 +8,7 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import PropertyGallery from "./PropertyGallery";
+import PropertyMap from "./PropertyMap";
 
 /* --------- tiny presentational helper --------- */
 function StatChip({ icon, label, value }) {
@@ -185,11 +186,7 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
           <h3 className="text-lg font-semibold text-gray-900">Location</h3>
         </div>
         <div className="px-6 md:px-8 py-6">
-          <div
-            id="map"
-            aria-label="Map placeholder"
-            className="h-64 w-full rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden"
-          ></div>
+          <PropertyMap property={property} />
         </div>
       </div>
     </main>

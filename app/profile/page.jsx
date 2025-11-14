@@ -18,6 +18,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    debugger;
     const fetchUserProperties = async (userId) => {
       if (!userId) {
         console.warn("No userId found in session");
@@ -42,7 +43,6 @@ const ProfilePage = () => {
       }
     };
     if (session?.user?.id) {
-      console.log("Session user ID:", session.user.id);
       fetchUserProperties(session.user.id);
     }
   }, [session]);

@@ -49,7 +49,6 @@ const PropertyAddForm = () => {
         body: formData,
       });
 
-      console.log("API response status:", res.status);
       if (res.status === 200) {
         toast.success("Property added successfully", {
           id: toastId,
