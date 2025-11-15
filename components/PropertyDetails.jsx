@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   FaBed,
   FaBath,
@@ -9,30 +9,34 @@ import {
 } from "react-icons/fa";
 import PropertyGallery from "./PropertyGallery";
 import PropertyMap from "./PropertyMap";
+import BookmarkButton from "./BookmarkButton";
 
-/* --------- tiny presentational helper --------- */
-function StatChip({ icon, label, value }) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-gray-800">
-      <div className="grid place-items-center w-10 h-10 rounded-full bg-white shadow-sm ring-1 ring-gray-200">
-        <span className="text-gray-700">{icon}</span>
-      </div>
-      <div className="flex items-baseline gap-2">
-        <span className="text-xl font-semibold">{value}</span>
-        <span className="text-sm text-gray-500">{label}</span>
-      </div>
+/* --------- Tiny presentational helper --------- */
+const StatChip = React.memo(({ icon, label, value }) => (
+  <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-gray-800">
+    <div className="grid place-items-center w-10 h-10 rounded-full bg-white shadow-sm ring-1 ring-gray-200">
+      <span className="text-gray-700">{icon}</span>
     </div>
-  );
-}
+    <div className="flex items-baseline gap-2">
+      <span className="text-xl font-semibold">{value}</span>
+      <span className="text-sm text-gray-500">{label}</span>
+    </div>
+  </div>
+));
 
 const PropertyDetails = React.memo(function PropertyDetails({ property }) {
-  // safe reads + sensible fallbacks
+  // Placeholder handler
+  const handleBookmark = useCallback((id) => {
+    console.log("Bookmark toggled for property:", id);
+  }, []);
+
+  // Safe reads + fallbacks
   const type = property?.type ?? "Property";
   const title = property?.name ?? "Untitled Property";
-  const beds = typeof property?.beds === "number" ? property.beds : null;
-  const baths = typeof property?.baths === "number" ? property.baths : null;
+  const beds = typeof property?.beds === "number" ? property.beds : "—";
+  const baths = typeof property?.baths === "number" ? property.baths : "—";
   const sqft =
-    typeof property?.square_feet === "number" ? property.square_feet : null;
+    typeof property?.square_feet === "number" ? property.square_feet : "—";
   const description =
     property?.description ??
     "A lovely property with great access to local amenities.";
@@ -40,7 +44,6 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
     ? property.amenities
     : [];
 
-  // Normalize location fields safely from either an object or string
   const loc = property?.location;
   const street =
     (typeof loc === "object" && loc?.street) ||
@@ -51,19 +54,33 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
   const hasAddress = street || city || state;
 
   return (
-    <main className="max-w-screen-2xl  px-4 md:px-6 lg:px-8 py-4">
+    <main className="max-w-screen-2xl px-4 md:px-6 lg:px-8">
       {/* OVERVIEW CARD */}
       <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-black/5">
+        <div className="absolute top-3 right-3 z-20">
+          <BookmarkButton
+            id={property.id}
+            isBookmarked={property.isBookmarked ?? false}
+            onBookmark={handleBookmark}
+          />
+        </div>
         <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-emerald-500 to-fuchsia-500" />
+
+        {/* Card content */}
         <div className="p-6 md:p-8">
+          {/* Property type badge */}
           <div className="mb-3">
             <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 text-blue-700 px-3 py-1 text-xs font-semibold ring-1 ring-blue-200">
               {type}
             </span>
           </div>
+
+          {/* Title */}
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
             {title}
           </h1>
+
+          {/* Location */}
           {hasAddress && (
             <div className="mt-3 flex items-center justify-center md:justify-start text-sm md:text-base">
               <span className="inline-flex items-center rounded-full bg-orange-50 text-orange-700 px-3 py-1 ring-1 ring-orange-200">
@@ -75,7 +92,8 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
               </span>
             </div>
           )}
-          {/* ✅ Rates & Options */}
+
+          {/* Rates */}
           {property?.rates && (
             <>
               <h3 className="text-lg font-bold my-6 bg-gray-800 text-white p-2 rounded">
@@ -123,7 +141,8 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
           )}
         </div>
       </div>
-      {/* description & details */}
+
+      {/* Description & details */}
       <div className="mt-6 rounded-2xl bg-white shadow-md ring-1 ring-black/5">
         <div className="border-b border-gray-100 px-6 md:px-8 py-4">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -132,33 +151,19 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
         </div>
         <div className="px-6 md:px-8 py-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Beds */}
-            <StatChip
-              icon={<FaBed aria-hidden="true" />}
-              label="Beds"
-              value={beds !== null ? beds : "—"}
-            />
-            {/* Baths */}
-            <StatChip
-              icon={<FaBath aria-hidden="true" />}
-              label="Baths"
-              value={baths !== null ? baths : "—"}
-            />
-            {/* Square Feet */}
-            <StatChip
-              icon={<FaRulerCombined aria-hidden="true" />}
-              label="sqft"
-              value={sqft !== null ? sqft.toLocaleString() : "—"}
-            />
+            <StatChip icon={<FaBed />} label="Beds" value={beds} />
+            <StatChip icon={<FaBath />} label="Baths" value={baths} />
+            <StatChip icon={<FaRulerCombined />} label="sqft" value={sqft} />
           </div>
 
           <p className="mt-6 text-gray-700 leading-relaxed">{description}</p>
         </div>
       </div>
-      {/* image gallery */}
+
+      {/* Image gallery */}
       <PropertyGallery images={property.images} />
 
-      {/* amenities */}
+      {/* Amenities */}
       {amenities.length > 0 && (
         <div className="mt-6 rounded-2xl bg-white shadow-md ring-1 ring-black/5">
           <div className="border-b border-gray-100 px-6 md:px-8 py-4">
@@ -171,7 +176,7 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
                   key={`${a}-${idx}`}
                   className="inline-flex items-center rounded-full bg-emerald-50 text-emerald-700 px-3 py-2 text-sm ring-1 ring-emerald-200"
                 >
-                  <FaCheck className="mr-2" aria-hidden="true" />
+                  <FaCheck className="mr-2" />
                   <span className="truncate">{a}</span>
                 </li>
               ))}
@@ -180,7 +185,7 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
         </div>
       )}
 
-      {/* map placeholder */}
+      {/* Map */}
       <div className="mt-6 rounded-2xl bg-white shadow-md ring-1 ring-black/5">
         <div className="border-b border-gray-100 px-6 md:px-8 py-4">
           <h3 className="text-lg font-semibold text-gray-900">Location</h3>
