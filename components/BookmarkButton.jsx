@@ -14,7 +14,7 @@ const BookmarkButton = React.memo(function BookmarkButton({
       ${
         isBookmarked
           ? "bg-gray-400 text-white cursor-not-allowed"
-          : "bg-blue-500 hover:bg-blue-600 text-white"
+          : "bg-green-300 hover:bg-green-500 text-white"
       }`}
     >
       <FaBookmark aria-hidden="true" />

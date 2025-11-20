@@ -1,19 +1,51 @@
 # Property-Lynk
 
-A personal project to build a full-stack rental property listing website using **Next.js**, **Tailwind CSS**, and **MongoDB**.
+A full-stack rental property listing platform built with **Next.js**, **Tailwind CSS**, **MongoDB**, **Mapbox**, and **Cloudinary**.
+
+---
 
 ## 🛠️ Tech Stack
 
-- [Next.js](https://nextjs.org/) – React framework with App Router for routing and server-side rendering.
-- [React](https://react.dev/) – Core library for building UI components.
-- [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework for rapid styling.
-- [Framer Motion](https://www.framer.com/motion/) – Animation library used for hover effects and transitions.
-- [React Icons](https://react-icons.github.io/react-icons/) – Scalable vector icons for UI elements.
-- [MongoDB](https://www.mongodb.com/) – NoSQL database for backend data storage.
+### **Frontend**
+
+- **Next.js** – App Router, SSR/SSG, server components
+- **React** – UI component library
+- **Tailwind CSS** – Utility-first styling
+- **Framer Motion** – Smooth animations & transitions
+- **React Icons** – Scalable icon library
+
+### **Backend**
+
+- **MongoDB** – NoSQL database for listing & user data
+- **Next.js API Routes** – Server-side logic
+- **Cloudinary** – Image upload & optimization
+- **Mapbox** – Geocoding and interactive maps
+
+---
+
+## 🌍 Integrations
+
+### 🗺️ **Mapbox**
+
+Used for:
+
+- Displaying maps on property pages
+- Converting addresses into coordinates
+- Interactive map markers for listings
+
+### 📸 **Cloudinary**
+
+Used for:
+
+- Uploading property images
+- Fast & optimized CDN delivery
+- Image transformations
+
+---
 
 ## 📦 Local Setup
 
-To run the project locally:
+Install dependencies:
 
 ```bash
 npm install     # Install dependencies
