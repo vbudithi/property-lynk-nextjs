@@ -16,7 +16,8 @@ const BookmarkButton = React.memo(function BookmarkButton({
 
   const handleClick = async () => {
     if (!session?.user) {
-      toast.error("You need to signin to use a bookmark property");
+      toast.dismiss();
+      toast.error("Signin to save the property", { id: "bookmark-auth-error" });
       return;
     }
     try {
@@ -31,17 +32,19 @@ const BookmarkButton = React.memo(function BookmarkButton({
 
       if (res.status === 200) {
         setBookmarked(data.isBookmarked);
+        toast.dismiss();
         toast.success(data.message, {
           className: "toast-progress",
+          id: "bookmark-auth-error",
         });
         onBookmark(id);
         return data;
       } else {
-        toast.error("Failed to update Bookmark");
+        toast.error("Failed to save the property");
       }
     } catch (error) {
       return NextResponse.json(
-        { message: "Something went wrong while bookmarking the property" },
+        { message: "Something went wrong while saving the property" },
         { status: 500 }
       );
     } finally {

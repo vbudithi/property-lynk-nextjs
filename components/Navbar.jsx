@@ -192,7 +192,7 @@ const Navbar = () => {
                 {isProfileMenuOpen && (
                   <div
                     id="user-menu"
-                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none cursor-pointer"
+                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-100 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none cursor-pointer"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu-button"
@@ -200,7 +200,7 @@ const Navbar = () => {
                   >
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700"
+                      className="block px-4 py-2 text-left text-gray-700 hover:bg-gray-300"
                       role="menuitem"
                       tabIndex="-1"
                       id="user-menu-item-0"
@@ -209,7 +209,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/properties/saved"
-                      className="block px-4 py-2 text-sm text-gray-700"
+                      className="block px-4 py-2 text-left text-gray-700 hover:bg-gray-300"
                       role="menuitem"
                       tabIndex="-1"
                       id="user-menu-item-2"
@@ -221,7 +221,7 @@ const Navbar = () => {
                         setIsProfileMenuOpen(false);
                         signOut();
                       }}
-                      className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                      className="w-full px-4 py-2 text-left rounded-md bg-gray-100 hover:bg-gray-200 transition-colors duration-200 cursor-pointer"
                       role="menuitem"
                       tabIndex="-1"
                       id="user-menu-item-2"
