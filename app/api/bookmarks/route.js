@@ -4,22 +4,25 @@ import Property from "@/models/Property";
 import { getSessionUser } from "@/utils/getSessionUser";
 import { NextResponse } from "next/server";
 
-export const dynamic = "force";
-export const POST = async (rsequest) => {
+export const dynamic = "force-dynamic";
+export const POST = async (request) => {
   try {
     await connectDB();
-    const { propertyId } = await request.json;
+    const { propertyId } = await request.json();
+
     const sessionUser = await getSessionUser();
-    if (!session || !session.userId) {
-      return new Response("User ID is required", { status: 401 });
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response("Unauthorized", { status: 401 });
     }
 
     const { userId } = sessionUser;
-    //Find user in database
+    //Fetch user
     const user = await User.findOne({ _id: userId });
+    //Ensure bookmark array exists
+    user.bookmarks = user.bookmarks || [];
     //check if property is bookmarked
     let isBookmarked = user.bookmarks.includes(propertyId);
-    let message;
+    let message = "";
 
     if (isBookmarked) {
       //If already bookmarked, remove it
@@ -27,18 +30,18 @@ export const POST = async (rsequest) => {
       message = "Bookmark Removed Succesfully";
       isBookmarked = false;
     } else {
-      if (!isBookmarked) {
-        //If not bookmarked, add it
-        user.bookmarks.push(propertyId);
-        message = "Bookmark Added Successfully";
-        isBookmarked = true;
-      }
+      //If not bookmarked, add it
+      user.bookmarks.push(propertyId);
+      message = "Bookmark Added Successfully";
+      isBookmarked = true;
     }
 
     await user.save();
     return NextResponse.json({ message, isBookmarked }, { status: 200 });
   } catch (error) {
-    console.log(error);
-    return NextResponse("Something Went Wrong", { status: 500 });
+    return NextResponse.json(
+      { error: "Something Went Wrong" },
+      { status: 500 }
+    );
   }
 };

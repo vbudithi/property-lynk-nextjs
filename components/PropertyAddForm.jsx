@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaUpload } from "react-icons/fa";
-
 import { toast } from "react-hot-toast";
 
 const PropertyAddForm = () => {
@@ -46,6 +45,7 @@ const PropertyAddForm = () => {
       });
       const res = await fetch(`/api/properties`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: formData,
       });
 

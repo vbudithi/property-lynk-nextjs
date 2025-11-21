@@ -1,8 +1,9 @@
 import connectDB from "@/config/database";
 import Property from "@/models/Property";
+import { NextResponse } from "next/server";
 
 //GET /api/properties/user/:userId
-export const GET = async (request, { params }) => {
+export const GET = async ({ params }) => {
   try {
     await connectDB();
     const { userId } = params;
@@ -17,6 +18,9 @@ export const GET = async (request, { params }) => {
     });
   } catch (error) {
     console.log(error);
-    return new Response("something went wrong", { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 };

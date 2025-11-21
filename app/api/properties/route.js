@@ -2,6 +2,7 @@ import connectDB from "@/config/database";
 import Property from "@/models/Property";
 import { getSessionUser } from "@/utils/getSessionUser";
 import cloudinary from "@/config/cloudinary";
+import { NextResponse } from "next/server";
 
 //GET /api/properties
 export const GET = async (request) => {
@@ -14,8 +15,10 @@ export const GET = async (request) => {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
-    return new Response("something went wrong", { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 };
 
@@ -25,7 +28,7 @@ export const POST = async (request) => {
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
-      return new Response("UserID is required", { status: 401 });
+      return NextResponse({ message: "UserID is required" }, { status: 401 });
     }
 
     const { userId } = sessionUser;

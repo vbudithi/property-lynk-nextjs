@@ -28,7 +28,6 @@ export async function GET(_req, { params }) {
 
     return NextResponse.json(property, { status: 200 });
   } catch (err) {
-    console.error(err);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }
@@ -44,7 +43,7 @@ export async function DELETE(_req, { params }) {
 
     //check for session user
     if (!sessionUser || !sessionUser.userId) {
-      return NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const { userId } = sessionUser;
     await connectDB();
@@ -63,7 +62,7 @@ export async function DELETE(_req, { params }) {
     }
     //check if the logged in user is the owner of the property
     if (property.owner.toString() !== userId) {
-      return NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     await Property.findByIdAndDelete(propertyId);
     return NextResponse.json(

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { NextResponse } from "next/server";
 
 let connected = false;
 
@@ -10,7 +11,6 @@ const connectDB = async () => {
 
   //If the database is already connected, dont connect again
   if (mongoose.connection.readyState >= 1) {
-    console.log("MongoDB is already connected...");
     return;
   }
   //connect to MongoDB
@@ -19,7 +19,10 @@ const connectDB = async () => {
     dbName: "propertylynk", (connected = true);
     console.log("MongoDB connected...");
   } catch (error) {
-    console.log(error);
+    return NextResponse.json(
+      { message: "Something went wrong while connecting to DB" },
+      { status: 500 }
+    );
   }
 };
 export default connectDB;

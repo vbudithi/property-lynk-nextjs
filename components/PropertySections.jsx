@@ -4,7 +4,6 @@ import Link from "next/link";
 import React, { useCallback } from "react";
 import PropertyDetails from "./PropertyDetails";
 import { FaArrowLeft } from "react-icons/fa";
-import BookmarkButton from "./BookmarkButton";
 import ShareButtons from "./ShareButtons";
 import PropertyContactForm from "./PropertyContactForm";
 

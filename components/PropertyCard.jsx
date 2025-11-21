@@ -58,9 +58,9 @@ const PropertyCard = ({ property }) => {
           </div>
           <div className="flex-shrink-0">
             <BookmarkButton
-              id={property.id}
+              id={property._id}
               isBookmarked={property.isBookmarked ?? false}
-              onBookmark={() => console.log("Bookmark clicked", property.id)}
+              onBookmark={() => console.log("Bookmark clicked", property._id)}
             />
           </div>
         </div>
