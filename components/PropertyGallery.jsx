@@ -27,9 +27,10 @@ const PropertyGallery = ({ images }) => {
               <Image
                 src={image}
                 alt="gallery image"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500 ease-out"
                 loading="lazy"
-                fill
               />
             </a>
           </div>

@@ -60,7 +60,6 @@ const PropertyCard = ({ property }) => {
             <BookmarkButton
               id={property._id}
               isBookmarked={property.isBookmarked ?? false}
-              onBookmark={() => console.log("Bookmark clicked", property._id)}
             />
           </div>
         </div>

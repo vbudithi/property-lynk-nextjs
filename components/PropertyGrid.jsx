@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import PropertyCard from "@/components/PropertyCard";
+import Link from "next/link";
+import { FaArrowLeft } from "react-icons/fa";
 
 const container = {
   hidden: { opacity: 0 },
@@ -25,18 +27,32 @@ const PropertyGrid = ({ properties }) => {
   }
 
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      animate="show"
-      className="grid grid-cols-1 md:grid-cols-3 gap-6"
-    >
-      {properties.map((property) => (
-        <motion.div key={property._id} variants={item}>
-          <PropertyCard property={property} />
-        </motion.div>
-      ))}
-    </motion.div>
+    <>
+      <section>
+        <div className="container mx-auto md:px-16 flex items-center justify-between mb-6">
+          <Link
+            href="/"
+            className="text-blue-500 hover:text-blue-600 flex items-center"
+            prefetch={false}
+          >
+            <FaArrowLeft className="mr-2" />
+            Go Back
+          </Link>
+        </div>
+      </section>
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 md:px-16"
+      >
+        {properties.map((property) => (
+          <motion.div key={property._id} variants={item}>
+            <PropertyCard property={property} />
+          </motion.div>
+        ))}
+      </motion.div>
+    </>
   );
 };
 

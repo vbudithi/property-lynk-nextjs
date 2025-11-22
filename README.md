@@ -1,8 +1,14 @@
-# Property-Lynk
+<h1 align="center">PropertyLynk</h1>
 
-A full-stack rental property listing platform built with **Next.js**, **Tailwind CSS**, **MongoDB**, **Mapbox**, and **Cloudinary**.
+<p align="center">A full-stack rental property listing platform.</p>
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-13-black?logo=next.js" />
+  <img src="https://img.shields.io/badge/TailwindCSS-3-blue?logo=tailwindcss" />
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb" />
+  <img src="https://img.shields.io/badge/Mapbox-Maps-blue?logo=mapbox" />
+  <img src="https://img.shields.io/badge/Cloudinary-Images-lightblue?logo=cloudinary" />
+</p>
 
 ## 🛠️ Tech Stack
 

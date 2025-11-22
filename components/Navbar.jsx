@@ -33,9 +33,6 @@ const Navbar = () => {
     setAuthProviders();
   }, []);
 
-  console.log(session);
-  console.log(profileImage);
-
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-blue-500 to-blue-900">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

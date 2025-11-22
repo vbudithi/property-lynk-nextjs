@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useCallback } from "react";
+import React from "react";
 import PropertyDetails from "./PropertyDetails";
 import { FaArrowLeft } from "react-icons/fa";
 import ShareButtons from "./ShareButtons";
@@ -13,12 +13,12 @@ const PropertySections = React.memo(function PropertySections({ property }) {
       <section>
         <div className="container m-auto py-6 px-16">
           <Link
-            href="/"
+            href="/properties"
             className="text-blue-500 hover:text-blue-600 flex items-center cursor-pointer"
             prefetch={false}
           >
             <FaArrowLeft className="mr-2" />
-            Back to Properties
+            All Properties
           </Link>
         </div>
       </section>
