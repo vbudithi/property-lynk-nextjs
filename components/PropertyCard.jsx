@@ -27,7 +27,7 @@ const PropertyCard = ({ property, onUnsave }) => {
   return (
     <div
       className="relative rounded-xl border border-gray-2
-    00 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-500 relative overflow-hidden group bg-white"
+    00 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-500 overflow-hidden group bg-white"
     >
       <div className="absolute top-3 right-3 flex flex-col items-end gap-2 z-20">
         <div className=" bg-white/90 px-4 py-2 rounded-lg text-blue-600 font-bold shadow transform transition-transform duration-500 group-hover:scale-105">

@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import profileDefault from "@/assets/images/profile.png";
-import { ClipLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 const ProfilePage = () => {
   const { data: session } = useSession();
 
@@ -56,6 +57,7 @@ const ProfilePage = () => {
         setProperties((prev) =>
           prev.filter((property) => property._id !== propertyId)
         );
+        toast.dismiss();
         toast.success("Deleted successfully", {
           className: "toast-progress",
         });
@@ -129,110 +131,99 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className="md:w-2/3 h-full bg-white/30 backdrop-blur-xl shadow-xl rounded-3xl border border-white/40 px-8 py-10 overflow-hidden">
-            {loading && (
-              <div className="flex flex-col items-center py-20">
-                <ClipLoader size={65} color="#0071e3" />
-                <p className="mt-4 text-sm text-[#6e6e73]">
-                  Loading your properties…
-                </p>
-              </div>
-            )}
-            {!loading && properties.length === 0 && (
-              <p className="text-sm text-[#6e6e73] italic">
-                No properties listed yet.
-              </p>
-            )}
-
-            {/* LISTINGS GRID */}
-            <div className="overflow-y-auto h-[73.2vh] pr-2 custom-scrollbar">
-              <div className="grid grid-cols-1 gap-2">
-                <h3 className="text-2xl font-semibold text-[#111155] text-center">
-                  Your Listings
-                </h3>
-                {properties.map((property) => (
-                  <div
-                    key={property._id}
-                    className=" relative group rounded-2xl overflow-hidden bg-white/40 backdrop-blur-lg border border-white/50 shadow-lg hover:shadow-xl transition"
-                  >
-                    <Link href={`/properties/${property._id}`}>
-                      <Image
-                        src={property.images[0]}
-                        alt={property.name}
-                        width={500}
-                        height={300}
-                        className="h-44 w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                      />
-                    </Link>
-
-                    <div className="px-5 py-4">
+            {loading ? (
+              <LoadingSpinner />
+            ) : (
+              <div className="overflow-y-auto h-[73.2vh] pr-2 custom-scrollbar">
+                <div className="grid grid-cols-1 gap-2">
+                  <h3 className="text-2xl font-semibold text-[#111155] text-center">
+                    Your Listings
+                  </h3>
+                  {properties.map((property) => (
+                    <div
+                      key={property._id}
+                      className=" relative group rounded-2xl overflow-hidden bg-white/40 backdrop-blur-lg border border-white/50 shadow-lg hover:shadow-xl transition"
+                    >
                       <Link href={`/properties/${property._id}`}>
-                        <h4 className="text-lg font-medium text-[#1d1d1f] hover:opacity-80 transition">
-                          {property.name}
-                        </h4>
+                        <Image
+                          src={property.images[0]}
+                          alt={property.name}
+                          width={500}
+                          height={300}
+                          className="h-44 w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+                        />
                       </Link>
 
-                      <p className="text-xs text-[#6e6e73] mt-1">
-                        {property.location?.street} {property.location?.city},{" "}
-                        {property.location?.state}
-                      </p>
+                      <div className="px-5 py-4">
+                        <Link href={`/properties/${property._id}`}>
+                          <h4 className="text-lg font-medium text-[#1d1d1f] hover:opacity-80 transition">
+                            {property.name}
+                          </h4>
+                        </Link>
 
-                      <div className="text-gray-800 font-semibold space-y-1">
-                        {/* Monthly */}
-                        {property.rates?.monthly && (
-                          <p>${property.rates.monthly} / month</p>
-                        )}
+                        <p className="text-xs text-[#6e6e73] mt-1">
+                          {property.location?.street} {property.location?.city},{" "}
+                          {property.location?.state}
+                        </p>
 
-                        {/* Weekly + Fortnight */}
-                        {property.rates?.weekly &&
-                          property.rates?.fortnight && (
-                            <>
-                              <p>${property.rates.weekly} / week</p>
-                              <p>${property.rates.fortnight} / fortnight</p>
-                            </>
+                        <div className="text-gray-800 font-semibold space-y-1">
+                          {/* Monthly */}
+                          {property.rates?.monthly && (
+                            <p>${property.rates.monthly} / month</p>
                           )}
 
-                        {/* Monthly + Weekly + Fortnight */}
-                        {property.rates?.monthly &&
-                          property.rates?.weekly &&
-                          property.rates?.fortnight && (
-                            <>
-                              <p>${property.rates.monthly} / month</p>
-                              <p>${property.rates.weekly} / week</p>
-                              <p>${property.rates.fortnight} / fortnight</p>
-                            </>
-                          )}
+                          {/* Weekly + Fortnight */}
+                          {property.rates?.weekly &&
+                            property.rates?.fortnight && (
+                              <>
+                                <p>${property.rates.weekly} / week</p>
+                                <p>${property.rates.fortnight} / fortnight</p>
+                              </>
+                            )}
 
-                        {/* Fallback: Nightly */}
-                        {!property.rates?.monthly &&
-                          !property.rates?.weekly &&
-                          !property.rates?.fortnight && (
-                            <p>${property.rates?.nightly} / night</p>
-                          )}
-                      </div>
+                          {/* Monthly + Weekly + Fortnight */}
+                          {property.rates?.monthly &&
+                            property.rates?.weekly &&
+                            property.rates?.fortnight && (
+                              <>
+                                <p>${property.rates.monthly} / month</p>
+                                <p>${property.rates.weekly} / week</p>
+                                <p>${property.rates.fortnight} / fortnight</p>
+                              </>
+                            )}
 
-                      <div className="mt-4 flex gap-3">
-                        <Link
-                          href={`/properties/${property._id}/edit`}
-                          className=" px-3 py-1.5 text-xs rounded-full
+                          {/* Fallback: Nightly */}
+                          {!property.rates?.monthly &&
+                            !property.rates?.weekly &&
+                            !property.rates?.fortnight && (
+                              <p>${property.rates?.nightly} / night</p>
+                            )}
+                        </div>
+
+                        <div className="mt-4 flex gap-3">
+                          <Link
+                            href={`/properties/${property._id}/edit`}
+                            className=" px-3 py-1.5 text-xs rounded-full
                                 bg-gray-200 hover:bg-gray-300
                                 text-[#1d1d1f]
                                 border border-white/50
                                 transition-colors duration-200"
-                        >
-                          Edit
-                        </Link>
-                        <button
-                          onClick={() => handleDeleteProperty(property._id)}
-                          className="px-3 py-1.5 text-xs rounded-full  bg-rose-400 text-white hover:bg-rose-500 transition cursor-pointer"
-                        >
-                          Delete
-                        </button>
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteProperty(property._id)}
+                            className="px-3 py-1.5 text-xs rounded-full  bg-rose-400 text-white hover:bg-rose-500 transition cursor-pointer"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

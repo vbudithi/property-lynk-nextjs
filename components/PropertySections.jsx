@@ -34,7 +34,7 @@ const PropertySections = React.memo(function PropertySections({ property }) {
                 id={property.id}
                 isContactedForm={property.isContactedForm}
               />
-              <ShareButtons id={property.id} />
+              <ShareButtons property={property} />
             </aside>
           </div>
         </div>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaUpload } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 const PropertyAddForm = () => {
   const router = useRouter();
@@ -707,7 +708,14 @@ const PropertyAddForm = () => {
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline cursor-pointer"
             type="submit"
           >
-            {loading ? "Submitting..." : "Add Property"}
+            {loading ? (
+              <>
+                <ClipLoader size={20} color="#fff" className="mr-2" />
+                Submitting....
+              </>
+            ) : (
+              "Save Property"
+            )}
           </button>
         </div>
       </form>

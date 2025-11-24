@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PropertyGrid from "@/components/PropertyGrid";
+import Link from "next/link";
 
 const SavedPropertiesPage = () => {
   const [properties, setProperties] = useState([]);
@@ -49,7 +50,16 @@ const SavedPropertiesPage = () => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-4">
           Saved Properties
         </h1>
-        <p>You haven’t saved any properties yet.</p>
+        <p className="mb-6">
+          You haven’t saved any properties yet. Browse available listings and
+          find your next home.
+        </p>
+        <Link
+          href="/properties"
+          className="inline-block px-6 py-3 bg-blue-100  border-blue-600 text-blue-600 font-medium rounded-lg hover:bg-blue-200 transition-colors"
+        >
+          Explore Properties
+        </Link>
       </section>
     );
   }

@@ -1,12 +1,91 @@
 import React from "react";
-import { FaShare } from "react-icons/fa";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  RedditShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  EmailShareButton,
+  RedditIcon,
+  LinkedinIcon,
+  EmailIcon,
+} from "react-share";
 
-const ShareButtons = React.memo(function ShareButtons({ id }) {
+const ShareButtons = React.memo(function ShareButtons({ property }) {
+  const shareUrl = `${process.env.NEXT_PUBLIC_DOMAIN}/properties/${property._id}`;
+  const title = property.name;
+
   return (
-    <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center cursor-pointer">
-      <FaShare className="mr-2" aria-hidden="true" />
-      Share Property
-    </button>
+    <>
+      <h3 className="text-xl font-bold text-center pt-2">
+        Share This Property
+      </h3>
+      <div className="flex gap-3 justify-center pb-5">
+        <FacebookShareButton
+          url={shareUrl}
+          quote={property.name}
+          hashtag={`#${property.type}forRent`}
+          aria-label="Share on Facebook"
+        >
+          <div title="Facebook">
+            <FacebookIcon size={40} round={true} />
+          </div>
+        </FacebookShareButton>
+        <WhatsappShareButton
+          url={shareUrl}
+          title={title}
+          seperator="::"
+          aria-label="Share on Whatsapp"
+        >
+          <div title="Whatsapp">
+            <WhatsappIcon size={40} round={true} />
+          </div>
+        </WhatsappShareButton>
+        <TwitterShareButton
+          url={shareUrl}
+          title={title}
+          hashtags={[`#${property.type}forRent`]}
+          aria-label="Share on Twitter"
+        >
+          <div title="Twitter">
+            <TwitterIcon size={40} round={true} />
+          </div>
+        </TwitterShareButton>
+        <RedditShareButton
+          url={shareUrl}
+          title={title}
+          aria-label="Share on Reddit"
+        >
+          <div title="Reddit">
+            <RedditIcon size={40} round={true} />
+          </div>
+        </RedditShareButton>
+
+        <EmailShareButton
+          url={shareUrl}
+          subject={title}
+          body={`Check out this property listing: ${shareUrl}`}
+          separator="::"
+          aria-label="Share on Email"
+        >
+          <div title="Email">
+            <EmailIcon size={40} round={true} />
+          </div>
+        </EmailShareButton>
+        <LinkedinShareButton
+          url={shareUrl}
+          title={title}
+          aria-label="Share on Linkedin"
+        >
+          <div title="Linkedin">
+            <LinkedinIcon size={40} round={true} />
+          </div>
+        </LinkedinShareButton>
+      </div>
+    </>
   );
 });
 
