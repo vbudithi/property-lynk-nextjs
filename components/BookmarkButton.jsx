@@ -3,11 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import { FaBookmark } from "react-icons/fa";
-const BookmarkButton = React.memo(function BookmarkButton({
-  id,
-  isBookmarked = false,
-}) {
-  const { data: session } = useSession();
+
+const BookmarkButton = React.memo(function BookmarkButton({ id, onUnsave }) {
+  const { data: session, status } = useSession();
   const userId = session?.user?.id;
   const [bookmarked, setBookmarked] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,6 +57,9 @@ const BookmarkButton = React.memo(function BookmarkButton({
       if (res.status === 200) {
         const data = await res.json();
         setBookmarked(data.isBookmarked);
+        if (!data.isBookmarked && onUnsave) {
+          onUnsave(id);
+        }
         toast.dismiss();
         toast.success(data.message, {
           className: "toast-progress",
@@ -73,7 +74,7 @@ const BookmarkButton = React.memo(function BookmarkButton({
     }
   };
 
-  if (loading || bookmarked == null) {
+  if (status === "loading" || loading || bookmarked === null) {
     return (
       <button
         disabled
@@ -91,12 +92,13 @@ const BookmarkButton = React.memo(function BookmarkButton({
       disabled={loading}
       className={`h-10 w-12 rounded-full flex items-center justify-center 
       font-bold cursor-pointer
-      ${
-        bookmarked
-          ? "bg-yellow-400 text-white cursor-not-allowed"
-          : "bg-green-300 hover:bg-green-500 text-white"
-      }
-       ${loading ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
+     ${
+       loading
+         ? "bg-gray-300 opacity-50 cursor-wait"
+         : bookmarked
+         ? "bg-orange-400 hover:bg-orange-500 text-white"
+         : "bg-gray-300 text-white"
+     }`}
     >
       <FaBookmark />
       {/* Bookmark Animation */}

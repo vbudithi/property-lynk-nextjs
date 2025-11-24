@@ -40,18 +40,17 @@ const PropertyAddForm = () => {
     try {
       setLoading(true);
       const formData = new FormData(e.target);
-      const toastId = toast.loading("Adding property...", {
+      toast.loading("Adding property...", {
         className: "toast-progress",
       });
       const res = await fetch(`/api/properties`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: formData,
       });
 
       if (res.status === 200) {
+        toast.dismiss();
         toast.success("Property added successfully", {
-          id: toastId,
           className: "toast-progress",
         });
         router.push("/properties");

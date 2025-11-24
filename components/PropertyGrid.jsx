@@ -20,7 +20,7 @@ const item = {
   show: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
-const PropertyGrid = ({ properties }) => {
+const PropertyGrid = ({ properties, onUnsave }) => {
   if (!Array.isArray(properties)) {
     console.warn("⚠️ PropertiesGrid received non-array:", properties);
     return <p>No properties found</p>;
@@ -48,7 +48,7 @@ const PropertyGrid = ({ properties }) => {
       >
         {properties.map((property) => (
           <motion.div key={property._id} variants={item}>
-            <PropertyCard property={property} />
+            <PropertyCard property={property} onUnsave={onUnsave} />
           </motion.div>
         ))}
       </motion.div>

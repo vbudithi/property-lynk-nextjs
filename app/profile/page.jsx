@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -17,152 +17,221 @@ const ProfilePage = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const rowClasses =
+    "flex justify-between items-center bg-white/5 backdrop-blur-xl p-5 rounded-2xl border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.25)]";
+
+  // Fetch user properties
   useEffect(() => {
-    debugger;
     const fetchUserProperties = async (userId) => {
-      if (!userId) {
-        console.warn("No userId found in session");
-        return;
-      }
-      console.log("Fetching user properties for userId:", userId);
+      if (!userId) return;
+
       try {
         const res = await fetch(`/api/properties/user/${userId}`);
-        console.log("API response status:", res.status);
-
-        if (res.status === 200) {
+        if (res.ok) {
           const data = await res.json();
-          console.log("API response data:", data);
           setProperties(data);
-        } else {
-          console.log("Failed to fetch properties. Status:", res.status);
         }
       } catch (error) {
-        console.error("Error fetching user properties:", error);
+        console.error("[ProfilePage] Could not load saved properties:", error);
+        toast.error("Unable to load your saved properties.");
       } finally {
         setLoading(false);
       }
     };
+
     if (session?.user?.id) {
       fetchUserProperties(session.user.id);
     }
   }, [session]);
 
   const handleDeleteProperty = async (propertyId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this property? This action cannot be undone."
-      )
-    ) {
-      console.log("Deleting property with id:", propertyId);
-    } else return;
+    if (!confirm("Delete this property permanently?")) return;
 
     try {
-      const res = await fetch(`api/properties/${propertyId}`, {
+      const res = await fetch(`/api/properties/${propertyId}`, {
         method: "DELETE",
       });
-      if (res.status === 200) {
-        const updatedProperties = properties.filter(
-          (property) => property._id !== propertyId
+
+      if (res.ok) {
+        setProperties((prev) =>
+          prev.filter((property) => property._id !== propertyId)
         );
-        setProperties(updatedProperties);
-        toast.success("Property deleted successfully", {
+        toast.success("Deleted successfully", {
           className: "toast-progress",
         });
       } else {
-        toast.error("Failed to delete property");
+        toast.error("Failed to delete");
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Unable to delete the property");
     }
   };
 
   return (
-    <section className="bg-blue-50">
-      <div className="container m-auto py-24">
-        <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-          <h1 className="text-3xl font-bold mb-4">Your Profile</h1>
-          <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/4 mx-20 mt-10">
-              <div className="mb-4">
-                <Image
-                  className="h-32 w-32 md:h-48 md:w-48 rounded-full mx-auto md:mx-0"
-                  src={profileImage || profileDefault}
-                  width={200}
-                  height={200}
-                  alt="User"
-                />
-              </div>
-              <h2 className="text-2xl mb-4">
-                <span className="font-bold block">Name: </span>{" "}
-                <span>{profileName || "N/A"}</span>
-              </h2>
-              <h2 className="text-2xl">
-                <span className="font-bold block">Email: </span>{" "}
-                <span>{profileEmail || "N/A"}</span>
-              </h2>
+    <section className=" overflow-hidden bg-[linear-gradient(135deg,#f6f7f8,#e6e8eb)] px-4 sm:px-8 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <header className="mb-10 text-center"></header>
+        {/* LEFT - PROFILE */}
+        <div className="flex flex-col md:flex-row gap-12">
+          <div
+            className="
+                    md:w-1/3
+                    h-full
+                    overflow-hidden
+                    bg-[#233144]
+                    backdrop-blur-2xl
+                    shadow-[0_12px_40px_rgba(0,0,0,0.55)]
+                    rounded-3xl
+                    border border-white/10
+                    px-10 py-20
+                    flex flex-col items-center "
+          >
+            <div className="relative group rounded-full  border overflow-hidden">
+              <Image
+                src={profileImage || profileDefault}
+                alt="Profile"
+                width={150}
+                height={150}
+                className="h-44 w-full object-cover transition-transform duration-300 ease-in-out
+      group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl"></div>
             </div>
+            <h2 className="mt-6 text-3xl font-semibold text-white tracking-wide">
+              {profileName || "User"}
+            </h2>
+            <p className="mt-1 text-sm text-blue-200/70 tracking-wide">
+              {profileEmail || "No email provided"}
+            </p>
+            <div className="w-full mt-8 pt-6 border-t border-white/10 text-xs space-y-4">
+              <div className={rowClasses}>
+                <span className="text-blue-200/70">User ID</span>
+                <span className="text-white font-semibold truncate max-w-[300px]">
+                  {session?.user?.id || "—"}
+                </span>
+              </div>
+              <div className={rowClasses}>
+                <span className="text-blue-200/70">Full Name</span>
+                <span className="text-white font-semibold truncate max-w-[300px]">
+                  {profileName || "User"}
+                </span>
+              </div>
+              <div className={rowClasses}>
+                <span className="text-blue-200/70">Email</span>
+                <span className="text-white font-semibold truncate max-w-[300px]">
+                  {profileEmail || "No email provided"}
+                </span>
+              </div>
+              <div className={rowClasses}>
+                <span className="text-blue-200/70">Status</span>
+                <span className="text-emerald-300 font-semibold">Active</span>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-2/3 h-full bg-white/30 backdrop-blur-xl shadow-xl rounded-3xl border border-white/40 px-8 py-10 overflow-hidden">
+            {loading && (
+              <div className="flex flex-col items-center py-20">
+                <ClipLoader size={65} color="#0071e3" />
+                <p className="mt-4 text-sm text-[#6e6e73]">
+                  Loading your properties…
+                </p>
+              </div>
+            )}
+            {!loading && properties.length === 0 && (
+              <p className="text-sm text-[#6e6e73] italic">
+                No properties listed yet.
+              </p>
+            )}
 
-            <div className="md:w-3/4 md:pl-4">
-              <h2 className="text-xl font-semibold mb-4">Your Listings</h2>
-              {!loading && properties.length === 0 && (
-                <p>You have no property listings.</p>
-              )}
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-20">
-                  <ClipLoader
-                    color="#3b82F6"
-                    size={80}
-                    aria-label="Loading Spinner"
-                  />
-                  <p className="mt-6 text-blue-600 font-semibold text-lg animate-pulse">
-                    Loading your properties...
-                  </p>
-                </div>
-              ) : (
-                properties.map((property) => (
-                  <div key={property._id} className="mb-10">
+            {/* LISTINGS GRID */}
+            <div className="overflow-y-auto h-[73.2vh] pr-2 custom-scrollbar">
+              <div className="grid grid-cols-1 gap-2">
+                <h3 className="text-2xl font-semibold text-[#111155] text-center">
+                  Your Listings
+                </h3>
+                {properties.map((property) => (
+                  <div
+                    key={property._id}
+                    className=" relative group rounded-2xl overflow-hidden bg-white/40 backdrop-blur-lg border border-white/50 shadow-lg hover:shadow-xl transition"
+                  >
                     <Link href={`/properties/${property._id}`}>
                       <Image
-                        className="h-32 w-full rounded-md object-cover"
                         src={property.images[0]}
-                        alt=""
-                        width="500"
-                        height="100"
-                        priority={true}
+                        alt={property.name}
+                        width={500}
+                        height={300}
+                        className="h-44 w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
                       />
                     </Link>
-                    <div className="mt-2">
+
+                    <div className="px-5 py-4">
                       <Link href={`/properties/${property._id}`}>
-                        <p className="text-lg font-semibold hover:underline">
+                        <h4 className="text-lg font-medium text-[#1d1d1f] hover:opacity-80 transition">
                           {property.name}
-                        </p>
+                        </h4>
                       </Link>
-                      <p className="text-gray-600">
+
+                      <p className="text-xs text-[#6e6e73] mt-1">
                         {property.location?.street} {property.location?.city},{" "}
-                        {property.location?.state} {property.location?.zipcode}
+                        {property.location?.state}
                       </p>
-                      <p className="text-gray-800 font-semibold">
-                        ${property.rates?.nightly} / night
-                      </p>
-                    </div>
-                    <div className="mt-2">
-                      <Link
-                        href={`properties/${property._id}/edit`}
-                        className="bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600 cursor-pointer"
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteProperty(property._id)}
-                        className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 cursor-pointer"
-                        type="button"
-                      >
-                        Delete
-                      </button>
+
+                      <div className="text-gray-800 font-semibold space-y-1">
+                        {/* Monthly */}
+                        {property.rates?.monthly && (
+                          <p>${property.rates.monthly} / month</p>
+                        )}
+
+                        {/* Weekly + Fortnight */}
+                        {property.rates?.weekly &&
+                          property.rates?.fortnight && (
+                            <>
+                              <p>${property.rates.weekly} / week</p>
+                              <p>${property.rates.fortnight} / fortnight</p>
+                            </>
+                          )}
+
+                        {/* Monthly + Weekly + Fortnight */}
+                        {property.rates?.monthly &&
+                          property.rates?.weekly &&
+                          property.rates?.fortnight && (
+                            <>
+                              <p>${property.rates.monthly} / month</p>
+                              <p>${property.rates.weekly} / week</p>
+                              <p>${property.rates.fortnight} / fortnight</p>
+                            </>
+                          )}
+
+                        {/* Fallback: Nightly */}
+                        {!property.rates?.monthly &&
+                          !property.rates?.weekly &&
+                          !property.rates?.fortnight && (
+                            <p>${property.rates?.nightly} / night</p>
+                          )}
+                      </div>
+
+                      <div className="mt-4 flex gap-3">
+                        <Link
+                          href={`/properties/${property._id}/edit`}
+                          className=" px-3 py-1.5 text-xs rounded-full
+                                bg-gray-200 hover:bg-gray-300
+                                text-[#1d1d1f]
+                                border border-white/50
+                                transition-colors duration-200"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteProperty(property._id)}
+                          className="px-3 py-1.5 text-xs rounded-full  bg-rose-400 text-white hover:bg-rose-500 transition cursor-pointer"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
-                ))
-              )}
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import BookmarkButton from "./BookmarkButton";
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, onUnsave }) => {
   const getRateDisplay = () => {
     const { rates } = property;
 
@@ -57,10 +57,7 @@ const PropertyCard = ({ property }) => {
             </Link>
           </div>
           <div className="flex-shrink-0">
-            <BookmarkButton
-              id={property._id}
-              isBookmarked={property.isBookmarked ?? false}
-            />
+            <BookmarkButton id={property._id} onUnsave={onUnsave} />
           </div>
         </div>
         <div className="flex justify-center gap-8 text-gray-500 mb-4">

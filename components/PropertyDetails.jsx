@@ -58,10 +58,7 @@ const PropertyDetails = React.memo(function PropertyDetails({ property }) {
       {/* OVERVIEW CARD */}
       <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-black/5">
         <div className="absolute top-3 right-3 z-20">
-          <BookmarkButton
-            id={property._id}
-            isBookmarked={property.isBookmarked ?? false}
-          />
+          <BookmarkButton id={property._id} />
         </div>
         <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-emerald-500 to-fuchsia-500" />
 
