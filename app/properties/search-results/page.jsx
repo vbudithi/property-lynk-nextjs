@@ -1,6 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import PropertyGrid from "@/components/PropertyGrid";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import PageHeader from "@/components/PageHeader";
+import PropertySearchForm from "@/components/PropertySearchForm";
+import SearchSection from "@/components/SearchSection";
 
 const SearchResultsPage = () => {
   const searchParams = useSearchParams();
@@ -20,7 +25,7 @@ const SearchResultsPage = () => {
         );
         if (res.ok) {
           const data = await res.json();
-          setProperties(data);
+          setProperties(data.properties);
         } else {
           setProperties([]);
         }
@@ -33,7 +38,34 @@ const SearchResultsPage = () => {
     fetchSearchResults();
   }, [location, propertyType]);
   console.log("properties", properties);
-  return <div>SearchResultsPage</div>;
+
+  if (loading) return <LoadingSpinner />;
+
+  if (!properties || properties.length === 0)
+    return (
+      <section className="px-4 py-6 text-center text-gray-500">
+        <p>No properties found</p>
+      </section>
+    );
+
+  return (
+    <>
+      <SearchSection>
+        <PropertySearchForm />
+      </SearchSection>
+      <section className="px-4 py-6">
+        <div className="container-xl lg:container m-auto">
+          <PageHeader
+            href="/properties"
+            title="Search Results"
+            backText="Back to Properties"
+          />
+
+          <PropertyGrid properties={properties} />
+        </div>
+      </section>
+    </>
+  );
 };
 
 export default SearchResultsPage;

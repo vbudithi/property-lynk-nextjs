@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import PropertyCard from "@/components/PropertyCard";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
 
 const container = {
   hidden: { opacity: 0 },
@@ -28,18 +26,6 @@ const PropertyGrid = ({ properties, onUnsave }) => {
 
   return (
     <>
-      <section>
-        <div className="container mx-auto md:px-16 flex items-center justify-between mb-6">
-          <Link
-            href="/"
-            className="text-blue-500 hover:text-blue-600 flex items-center"
-            prefetch={false}
-          >
-            <FaArrowLeft className="mr-2" />
-            Go Back
-          </Link>
-        </div>
-      </section>
       <motion.div
         variants={container}
         initial="hidden"

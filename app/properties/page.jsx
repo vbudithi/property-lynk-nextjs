@@ -1,5 +1,8 @@
 import PropertyGrid from "@/components/PropertyGrid";
 import { fetchProperties } from "@/utils/request";
+import PageHeader from "@/components/PageHeader";
+import SearchSection from "@/components/SearchSection";
+import PropertySearchForm from "@/components/PropertySearchForm";
 
 const PropertiesPage = async () => {
   const data = await fetchProperties();
@@ -29,11 +32,21 @@ const PropertiesPage = async () => {
   }
 
   return (
-    <section className="px-4 py-6">
-      <div className="container-xl lg:container m-auto">
-        <PropertyGrid properties={properties} />
-      </div>
-    </section>
+    <>
+      <SearchSection>
+        <PropertySearchForm />
+      </SearchSection>
+      <section className="px-4 py-6">
+        <div className="container-xl lg:container m-auto">
+          <PageHeader
+            href="/"
+            title="Property Listings"
+            backText="Back to Home"
+          />
+          <PropertyGrid properties={properties} />
+        </div>
+      </section>
+    </>
   );
 };
 

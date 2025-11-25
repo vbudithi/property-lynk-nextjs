@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import profileDefault from "@/assets/images/profile.png";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import PageHeader from "@/components/PageHeader";
 
 const ProfilePage = () => {
   const { data: session } = useSession();
@@ -136,9 +137,8 @@ const ProfilePage = () => {
             ) : (
               <div className="overflow-y-auto h-[73.2vh] pr-2 custom-scrollbar">
                 <div className="grid grid-cols-1 gap-2">
-                  <h3 className="text-2xl font-semibold text-[#111155] text-center">
-                    Your Listings
-                  </h3>
+                  <PageHeader href="/" title="Your Listings" backText="Home" />
+
                   {properties.map((property) => (
                     <div
                       key={property._id}

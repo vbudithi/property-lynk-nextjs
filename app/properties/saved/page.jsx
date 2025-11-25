@@ -4,6 +4,9 @@ import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PropertyGrid from "@/components/PropertyGrid";
 import Link from "next/link";
+import PageHeader from "@/components/PageHeader";
+import SearchSection from "@/components/SearchSection";
+import PropertySearchForm from "@/components/PropertySearchForm";
 
 const SavedPropertiesPage = () => {
   const [properties, setProperties] = useState([]);
@@ -65,14 +68,21 @@ const SavedPropertiesPage = () => {
   }
 
   return (
-    <section className="px-4 py-6">
-      <div className="container-xl lg:container m-auto">
-        <h1 className="text-3xl font-semibold text-gray-900 mb-8 text-center">
-          Saved Properties
-        </h1>
-        <PropertyGrid properties={properties} onUnsave={handleRemove} />
-      </div>
-    </section>
+    <>
+      <SearchSection>
+        <PropertySearchForm />
+      </SearchSection>
+      <section className="px-4 py-6">
+        <div className="container-xl lg:container m-auto">
+          <PageHeader
+            href="/properties"
+            title="Saved Properties"
+            backText="Back to Properties"
+          />
+          <PropertyGrid properties={properties} onUnsave={handleRemove} />
+        </div>
+      </section>
+    </>
   );
 };
 
