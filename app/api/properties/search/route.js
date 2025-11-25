@@ -11,6 +11,7 @@ export const GET = async (request) => {
     const location = searchParams.get("location");
     const propertyType = searchParams.get("propertyType");
     const locationPattern = new RegExp(location, "i");
+
     //Match location pattern against database fields
     let query = {
       $or: [
@@ -27,7 +28,6 @@ export const GET = async (request) => {
       const typePattern = new RegExp(propertyType, "i");
       query.type = typePattern;
     }
-
     const properties = await Property.find(query);
     return NextResponse.json({ properties }, { status: 200 });
   } catch (error) {
