@@ -22,11 +22,11 @@ const PropertySearchForm = () => {
     <form
       onSubmit={handleSubmit}
       className="
-        w-full max-w-3xl mx-auto mt-8
+        w-full max-w-4xl mx-auto mt-8
         bg-white/90 backdrop-blur-lg
         rounded-full
         px-6 py-4
-        shadow-[0_8px_25px_rgba(0,0,0,0.12)]
+        shadow-[0_8px_45px_rgba(0,0,0,0.12)]
         border border-gray-100
         flex flex-col md:flex-row gap-4 items-center
         animate-[float_6s_ease-in-out_infinite]
