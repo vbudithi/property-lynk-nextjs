@@ -23,7 +23,7 @@ const PropertyContactForm = React.memo(function PropertyContactForm({
       email,
       phone,
       message,
-      recipient: property.owner,
+      recipient: property.owner._id ?? property.owner,
       property: id,
     };
 
@@ -36,17 +36,32 @@ const PropertyContactForm = React.memo(function PropertyContactForm({
         body: JSON.stringify(data),
       });
 
-      if (res.status == 200) {
-        toast.success("Message Sent successfully");
+      const result = await res.json();
+      console.log("DEBUG:", res.status, result);
+
+      //success
+      if (res.ok) {
+        toast.success("Message Sent Successfully");
         setWasSubmitted(true);
-      } else if (res.status === 400 || res.status === 401) {
-        toast.error("You must be logedin to send a message");
-      } else {
-        toast.error("Error sending form");
+        return;
       }
+
+      //self-message
+      if (res.status === 400) {
+        toast.error(result.message);
+        return;
+      }
+
+      //Unauthorized
+      if (res.status === 401) {
+        toast.error(result.message);
+      }
+
+      // Other errors
+      toast.error(result.message ?? "Error sending form");
     } catch (error) {
       console.log(error);
-      toast.error("Error sending form");
+      toast.error("Network error");
     } finally {
       setName("");
       setEmail("");

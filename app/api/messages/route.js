@@ -3,13 +3,36 @@ import Message from "@/models/Message";
 import { getSessionUser } from "@/utils/getSessionUser";
 import {
   successResponse,
-  badRequest,
+  selfMessageError,
   unauthorized,
   serverError,
 } from "@/utils/apiResponse";
 
 export const dynamic = "force-dynamic";
 
+//GET /api/messages
+export const GET = async () => {
+  try {
+    await connectDB();
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser || !sessionUser.user) {
+      return unauthorized();
+    }
+
+    const { userId } = sessionUser;
+    const messages = await Message.find({ recipient: userId })
+      .sort({ createdAt: -1 })
+      .populate("sender", "username")
+      .populate("property", "name");
+    return successResponse(messages);
+  } catch (error) {
+    console.log(error);
+    return serverError();
+  }
+};
+
+//POST /api/messages
 export const POST = async (request) => {
   try {
     await connectDB();
@@ -18,14 +41,17 @@ export const POST = async (request) => {
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.user) {
-      return unauthorized();
+      return unauthorized("You must be logged in to send a message");
     }
     const { user } = sessionUser;
+
     //Cannot message to self
     if (user.id === recipient) {
-      return badRequest("Cannot send a message to yourself");
+      return selfMessageError("");
     }
-    const newMessage = new Message({
+
+    // Create new message
+    await Message.create({
       sender: user.id,
       recipient,
       property,
@@ -34,10 +60,10 @@ export const POST = async (request) => {
       phone,
       body: message,
     });
-    await newMessage.save();
+
     return successResponse({ message: "Message Sent" });
   } catch (error) {
     console.log(error);
-    return serverError();
+    return serverError("Error sending message");
   }
 };
