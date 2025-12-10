@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 const PropertyContactForm = React.memo(function PropertyContactForm({
   property,
   id,
 }) {
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -38,7 +40,7 @@ const PropertyContactForm = React.memo(function PropertyContactForm({
         toast.success("Message Sent successfully");
         setWasSubmitted(true);
       } else if (res.status === 400 || res.status === 401) {
-        toast.error("You need to login to send a message");
+        toast.error("You must be logedin to send a message");
       } else {
         toast.error("Error sending form");
       }
@@ -57,7 +59,9 @@ const PropertyContactForm = React.memo(function PropertyContactForm({
       <h3 className="text-xl font-bold mb-6 text-center">
         Contact Property Manager
       </h3>
-      {wasSubmitted ? (
+      {!session ? (
+        <p>You must be logged in to send a message</p>
+      ) : wasSubmitted ? (
         <p className="text-green-500 mb-4 text-center">
           Your message has been submitted
         </p>
