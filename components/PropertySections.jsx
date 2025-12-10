@@ -30,11 +30,7 @@ const PropertySections = React.memo(function PropertySections({ property }) {
 
             {/* Sidebar */}
             <aside className="space-y-4 sticky top-40 self-start">
-              <PropertyContactForm
-                property={property}
-                id={property.id}
-                isContactedForm={property.isContactedForm}
-              />
+              <PropertyContactForm property={property} id={property._id} />
               <ShareButtons property={property} />
             </aside>
           </div>
