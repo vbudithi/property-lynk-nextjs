@@ -5,64 +5,89 @@ import {
   FaPhoneAlt,
   FaTrash,
   FaCheck,
+  FaHome,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
 
-const MessageForm = ({ message }) => {
+const MessageForm = ({ message, index }) => {
   return (
-    <div className="relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all p-6">
-      {/* HEADER */}
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Property Inquiry
-          </h2>
-
-          <p className="text-sm text-blue-600 font-medium">
-            {message.property.name}
-          </p>
-        </div>
-
-        <p className="text-xs text-gray-500">
+    <div className="p-8 space-y-8">
+      {/*  HEADER  */}
+      <div className="relative border-b pb-6">
+        <p className="absolute right-0 top-0 text-xs text-gray-500">
           {new Date(message.createdAt).toLocaleString()}
         </p>
-      </div>
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-5">
-        <p className="text-gray-700 leading-relaxed">{message.body}</p>
-      </div>
-      <div className="space-y-2 mb-6">
-        <div className="flex items-center gap-2 text-sm text-gray-700">
-          <FaUser className="text-gray-500" />
-          <span className="font-medium">{message.name}</span>
-        </div>
 
-        <div className="flex items-center gap-2 text-sm">
-          <FaEnvelope className="text-gray-500" />
-          <a
-            href={`mailto:${message.email}`}
-            className="text-blue-600 hover:underline"
-          >
-            {message.email}
-          </a>
-        </div>
+        <div className="text-center">
+          <p className="text-xl text-blue-900 font-bold flex justify-center items-center gap-2">
+            <FaHome className="text-gray-400" />
+            Property Inquiry #{index}
+          </p>
+          <h1 className="text-3xl font-bold text-gray-900 mt-4">
+            {message.property?.name}
+          </h1>
 
-        <div className="flex items-center gap-2 text-sm">
-          <FaPhoneAlt className="text-gray-500" />
-          <a
-            href={`tel:${message.phone}`}
-            className="text-blue-600 hover:underline"
-          >
-            {message.phone}
-          </a>
+          <p className="text-gray-600 flex justify-center items-center gap-2 mt-2 text-sm">
+            <FaMapMarkerAlt className="text-red-500" />
+            {message.property?.location?.street},{" "}
+            {message.property?.location?.city},{" "}
+            {message.property?.location?.state} -{" "}
+            {message.property?.location?.zipcode}
+          </p>
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <button className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition cursor-pointer">
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 shadow-sm">
+        <p className="text-gray-800 text-lg leading-relaxed">{message.body}</p>
+      </div>
+
+      {/* SENDER DETAILS */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">
+          Sender Details
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center justify-center gap-3 text-gray-700 bg-gray-50 rounded-lg p-3">
+            <FaUser className="text-gray-500" />
+            <p className="font-medium truncate flex items-center">
+              {message.name}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 text-gray-700 bg-gray-50 rounded-lg p-3">
+            <FaEnvelope className="text-gray-500" />
+            <a
+              href={`mailto:${message.email}`}
+              className="text-blue-600 hover:underline truncate flex items-center"
+            >
+              {message.email}
+            </a>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 text-gray-700 bg-gray-50 rounded-lg p-3">
+            <FaPhoneAlt className="text-gray-500" />
+            <a
+              href={`tel:${message.phone}`}
+              className="text-blue-600 hover:underline truncate flex:items-center"
+            >
+              {message.phone}
+            </a>
+          </div>
+          <div className="flex items-center justify-center gap-3 text-gray-700 bg-gray-50 rounded-lg p-3">
+            <span className="text-gray-500 flex items-center">📅</span>
+            <p>{new Date(message.createdAt).toLocaleString()}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-4 pt-4 justify-center">
+        <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg shadow-sm text-sm cursor-pointer">
           <FaCheck size={12} />
-          Mark As Read
+          Mark as Read
         </button>
 
-        <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition cursor-pointer">
+        <button className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-sm text-sm cursor-pointer">
           <FaTrash size={12} />
           Delete
         </button>

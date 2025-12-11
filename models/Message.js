@@ -4,17 +4,17 @@ const MessageSchema = new Schema(
   {
     sender: {
       type: Schema.Types.ObjectId,
-      refId: "User",
+      ref: "User",
       required: true,
     },
     recipient: {
       type: Schema.Types.ObjectId,
-      refId: "User",
+      ref: "User",
       required: true,
     },
     property: {
       type: Schema.Types.ObjectId,
-      refId: "Property",
+      ref: "Property",
       required: true,
     },
     name: {
@@ -26,6 +26,9 @@ const MessageSchema = new Schema(
       required: [true, "Email is required"],
     },
     body: {
+      type: String,
+    },
+    phone: {
       type: String,
     },
     read: {

@@ -6,6 +6,7 @@ import {
   selfMessageError,
   unauthorized,
   serverError,
+  badRequest,
 } from "@/utils/apiResponse";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +25,12 @@ export const GET = async () => {
     const messages = await Message.find({ recipient: userId })
       .sort({ createdAt: -1 })
       .populate("sender", "username")
-      .populate("property", "name");
+      .populate({
+        path: "property",
+        select:
+          "name location.street location.city location.state location.zipcode",
+      });
+
     return successResponse(messages);
   } catch (error) {
     console.log(error);
