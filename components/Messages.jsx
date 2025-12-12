@@ -34,7 +34,7 @@ const Messages = () => {
     <section className="flex justify-center items-start py-14 bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="w-full max-w-5xl px-4">
         <div className=" bg-white px-8 py-10 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.08)] border border-blue-100">
-          <div className="flex justify-center items-center mb-8">
+          <div className="flex mb-8">
             <FaInbox size={32} className="text-blue-600 mr-3" />
             <h1 className="text-4xl font-bold text-gray-900">
               Inbox

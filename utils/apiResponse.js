@@ -33,7 +33,7 @@ export const selfMessageError = (
   );
 
 // 401 Unauthorized → User not authenticated
-export const unauthorized = (message = "You must be logged in") =>
+export const unauthorized = (message = "User ID is required") =>
   NextResponse.json(
     {
       success: false,

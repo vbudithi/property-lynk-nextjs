@@ -6,10 +6,8 @@ import { getSessionUser } from "@/utils/getSessionUser";
 // GET /api/properties/:id
 export async function GET(_req, { params }) {
   try {
-    const { id } = await params;
-
     await connectDB();
-
+    const { id } = params;
     // quick guard for invalid ObjectId to avoid CastError
     if (!id || id.length < 12) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
@@ -38,6 +36,7 @@ export async function GET(_req, { params }) {
 // DELETE /api/properties/:id
 export async function DELETE(_req, { params }) {
   try {
+    await connectDB();
     const propertyId = await params.id;
     const sessionUser = await getSessionUser();
 
@@ -46,7 +45,6 @@ export async function DELETE(_req, { params }) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const { userId } = sessionUser;
-    await connectDB();
 
     // quick guard for invalid ObjectId to avoid CastError
     if (!propertyId || propertyId.length < 12) {
@@ -79,22 +77,18 @@ export async function DELETE(_req, { params }) {
 }
 
 // UPDATE /api/properties/:id
-
 export const PUT = async (request, { params }) => {
   try {
     await connectDB();
-    const sessionUser = await getSessionUser();
+    const { id } = params;
 
+    const sessionUser = await getSessionUser();
     if (!sessionUser || !sessionUser.userId) {
       return new Response("UserID is required", { status: 401 });
     }
 
-    const { id } = params;
     const { userId } = sessionUser;
     const formData = await request.formData();
-
-    //Access all values from amenities and images fields
-    const amenities = formData.getAll("amenities");
 
     //get Property to update
     const existingProperty = await Property.findById(id).lean();
@@ -106,7 +100,10 @@ export const PUT = async (request, { params }) => {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    //create all the  propertyData object for database
+    //Access all values from amenities and images fields
+    const amenities = formData.getAll("amenities");
+
+    //create all the propertyData object for database
     const propertyData = {
       type: formData.get("type"),
       name: formData.get("name"),

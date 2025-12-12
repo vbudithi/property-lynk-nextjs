@@ -6,7 +6,6 @@ import {
   selfMessageError,
   unauthorized,
   serverError,
-  badRequest,
 } from "@/utils/apiResponse";
 
 export const dynamic = "force-dynamic";
