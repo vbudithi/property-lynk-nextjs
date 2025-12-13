@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaEnvelope,
   FaUser,
@@ -10,31 +10,13 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import Link from "next/link";
-import toast from "react-hot-toast";
 
-const MessageForm = ({ message, index }) => {
+const MessageForm = ({ message, index, handleDelete, handleReadClick }) => {
   const [isRead, setIsRead] = useState(message.read);
-
-  const handleRedClick = async () => {
-    try {
-      const res = await fetch(`/api/messages/${message._id}`, {
-        method: "PUT",
-      });
-
-      if (res.status === 200) {
-        const { read } = await res.json();
-        setIsRead(read);
-        if (read) {
-          toast.success("Marked as read");
-        } else {
-          toast.success("Marked as new");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
-    }
-  };
+  // const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    setIsRead(message.read);
+  }, [message.read]);
 
   return (
     <div className="relative p-8 mb-6 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
@@ -127,7 +109,7 @@ const MessageForm = ({ message, index }) => {
 
       <div className="flex justify-center gap-4 pt-6">
         <button
-          onClick={handleRedClick}
+          onClick={() => handleReadClick(message._id)}
           className={`flex items-center gap-2 ${
             isRead
               ? "bg-emerald-600 hover:bg-emerald-700 text-white"
@@ -138,7 +120,10 @@ const MessageForm = ({ message, index }) => {
           {isRead ? "Mark As New" : "Mark As Read"}
         </button>
 
-        <button className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-sm text-sm cursor-pointer">
+        <button
+          onClick={() => handleDelete(message._id)}
+          className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-sm text-sm cursor-pointer"
+        >
           <FaTrash size={12} />
           Delete
         </button>

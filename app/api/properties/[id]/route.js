@@ -58,7 +58,7 @@ export async function DELETE(_req, { params }) {
         { status: 404 }
       );
     }
-    //check if the logged in user is the owner of the property
+    //check if the loggedin user is the owner of the property
     if (property.owner.toString() !== userId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }

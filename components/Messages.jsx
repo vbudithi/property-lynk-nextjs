@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 import MessageForm from "./MessageForm";
 import { FaInbox } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const Messages = () => {
   const [messages, setMessages] = useState([]);
@@ -29,6 +30,50 @@ const Messages = () => {
   if (loading) {
     return <LoadingSpinner />;
   }
+  const handleReadClick = async (id) => {
+    try {
+      const res = await fetch(`/api/messages/${id}`, {
+        method: "PUT",
+      });
+      if (res.ok) {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg._id === id ? { ...msg, read: !msg.read } : msg
+          )
+        );
+        toast.dismiss();
+        toast.success("Message Status Updated", {
+          className: "toast-progress",
+        });
+      } else {
+        toast.error("Failed to update the status");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("Delete this message permanently?")) return;
+    try {
+      const res = await fetch(`/api/messages/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setMessages((prev) => prev.filter((msg) => msg._id !== id));
+        toast.dismiss();
+        toast.success("Deleted Successfully", {
+          className: "toast-progress",
+        });
+      } else {
+        toast.error("Failed to deleted the message");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to delete the message");
+    }
+  };
 
   return (
     <section className="flex justify-center items-start py-14 bg-gradient-to-br from-blue-50 to-blue-100">
@@ -50,6 +95,8 @@ const Messages = () => {
                   key={message._id}
                   message={message}
                   index={index + 1}
+                  handleDelete={handleDelete}
+                  handleReadClick={handleReadClick}
                 />
               ))
             )}
