@@ -11,9 +11,8 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 
-const MessageForm = ({ message, index, handleDelete, handleReadClick }) => {
+const MessageForm = ({ message, index, handleDelete, handleMarkRead }) => {
   const [isRead, setIsRead] = useState(message.read);
-  // const [messages, setMessages] = useState([]);
   useEffect(() => {
     setIsRead(message.read);
   }, [message.read]);
@@ -109,7 +108,7 @@ const MessageForm = ({ message, index, handleDelete, handleReadClick }) => {
 
       <div className="flex justify-center gap-4 pt-6">
         <button
-          onClick={() => handleReadClick(message._id)}
+          onClick={() => handleMarkRead(message._id)}
           className={`flex items-center gap-2 ${
             isRead
               ? "bg-emerald-600 hover:bg-emerald-700 text-white"

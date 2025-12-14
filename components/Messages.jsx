@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 import MessageForm from "./MessageForm";
 import { FaInbox } from "react-icons/fa";
@@ -27,22 +27,36 @@ const Messages = () => {
     getMessages();
   }, []);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-  const handleReadClick = async (id) => {
+  const orderedMessages = useMemo(() => {
+    return [...messages].sort((a, b) => {
+      // unread messages first
+      if (a.read !== b.read) {
+        return a.read ? 1 : -1;
+      }
+
+      // then newer date first
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  }, [messages]);
+
+  const handleMarkRead = async (id) => {
     try {
       const res = await fetch(`/api/messages/${id}`, {
         method: "PUT",
       });
       if (res.ok) {
+        let newReadValue;
         setMessages((prev) =>
-          prev.map((msg) =>
-            msg._id === id ? { ...msg, read: !msg.read } : msg
-          )
+          prev.map((msg) => {
+            if (msg._id === id) {
+              newReadValue = !msg.read;
+              return { ...msg, read: newReadValue };
+            }
+            return msg;
+          })
         );
         toast.dismiss();
-        toast.success("Message Status Updated", {
+        toast.success(newReadValue ? "Marked as read" : "Marked as new", {
           className: "toast-progress",
         });
       } else {
@@ -75,6 +89,10 @@ const Messages = () => {
     }
   };
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <section className="flex justify-center items-start py-14 bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="w-full max-w-5xl px-4">
@@ -83,20 +101,20 @@ const Messages = () => {
             <FaInbox size={32} className="text-blue-600 mr-3" />
             <h1 className="text-4xl font-bold text-gray-900">
               Inbox
-              {messages.length > 0 && `(${messages.length})`}
+              {orderedMessages.length > 0 && `(${orderedMessages.length})`}
             </h1>
           </div>
           <div className="max-h-[650px] overflow-y-auto pr-2 space-y-5 scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100">
-            {messages.length === 0 ? (
+            {orderedMessages.length === 0 ? (
               <p className="text-gray-500 text-center">No messages found.</p>
             ) : (
-              messages.map((message, index) => (
+              orderedMessages.map((message, index) => (
                 <MessageForm
                   key={message._id}
                   message={message}
                   index={index + 1}
                   handleDelete={handleDelete}
-                  handleReadClick={handleReadClick}
+                  handleMarkRead={handleMarkRead}
                 />
               ))
             )}

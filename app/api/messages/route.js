@@ -21,7 +21,7 @@ export const GET = async () => {
     }
 
     const { userId } = sessionUser;
-    const messages = await Message.find({ recipient: userId })
+    const readMessages = await Message.find({ recipient: userId, read: true })
       .sort({ createdAt: -1 })
       .populate("sender", "username")
       .populate({
@@ -29,6 +29,19 @@ export const GET = async () => {
         select:
           "name location.street location.city location.state location.zipcode",
       });
+    const unReadMessages = await Message.find({
+      recipient: userId,
+      read: false,
+    })
+      .sort({ createdAt: -1 })
+      .populate("sender", "username")
+      .populate({
+        path: "property",
+        select:
+          "name location.street location.city location.state location.zipcode",
+      });
+
+    const messages = [...unReadMessages, ...readMessages];
 
     return successResponse(messages);
   } catch (error) {
@@ -52,7 +65,7 @@ export const POST = async (request) => {
 
     //Cannot message to self
     if (user.id === recipient) {
-      return selfMessageError("");
+      return selfMessageError();
     }
 
     // Create new message

@@ -34,8 +34,7 @@ export const PUT = async (_req, { params }) => {
     //update message to read/unread depending on the current status
     message.read = !message.read;
     await message.save();
-
-    return successResponse({ message: "Status updated" });
+    return successResponse({ read: message.read });
   } catch (error) {
     console.log(error);
     return serverError();
