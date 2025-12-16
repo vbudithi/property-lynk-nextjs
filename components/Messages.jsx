@@ -4,10 +4,12 @@ import LoadingSpinner from "./LoadingSpinner";
 import MessageForm from "./MessageForm";
 import { FaInbox } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 const Messages = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { setUnreadCount } = useGlobalContext();
 
   useEffect(() => {
     const getMessages = async () => {
@@ -27,6 +29,11 @@ const Messages = () => {
     getMessages();
   }, []);
 
+  useEffect(() => {
+    const unread = messages.filter((m) => !m.read).length;
+    setUnreadCount(unread);
+  }, [messages, setUnreadCount]);
+
   const orderedMessages = useMemo(() => {
     return [...messages].sort((a, b) => {
       // unread messages first
@@ -41,13 +48,13 @@ const Messages = () => {
 
   const handleMarkRead = async (id) => {
     try {
-      const res = await fetch(`/api/messages/${id}`, {
-        method: "PUT",
-      });
+      const res = await fetch(`/api/messages/${id}`, { method: "PUT" });
       if (res.ok) {
-        let newReadValue;
-        setMessages((prev) =>
-          prev.map((msg) => {
+        let newReadValue = false;
+
+        // Update messages
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) => {
             if (msg._id === id) {
               newReadValue = !msg.read;
               return { ...msg, read: newReadValue };
@@ -59,8 +66,6 @@ const Messages = () => {
         toast.success(newReadValue ? "Marked as read" : "Marked as new", {
           className: "toast-progress",
         });
-      } else {
-        toast.error("Failed to update the status");
       }
     } catch (error) {
       console.error(error);

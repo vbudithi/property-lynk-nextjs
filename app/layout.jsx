@@ -5,6 +5,7 @@ import { League_Spartan } from "next/font/google";
 import "@/assets/styles/globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import Providers from "@/providers";
+import { GlobalProvider } from "@/context/GlobalContext";
 
 export const metadata = {
   title: "PropertyLynk | Find  the Perfect Rental",
@@ -14,17 +15,19 @@ export const metadata = {
 
 const MainLayout = ({ children }) => {
   return (
-    <AuthProvider>
-      <html lang="en" className={`${leagueSpartan.variable}`}>
-        <body className="flex flex-col min-h-screen">
-          <Providers>
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </Providers>
-        </body>
-      </html>
-    </AuthProvider>
+    <GlobalProvider>
+      <AuthProvider>
+        <html lang="en" className={`${leagueSpartan.variable}`}>
+          <body className="flex flex-col min-h-screen">
+            <Providers>
+              <Navbar />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </Providers>
+          </body>
+        </html>
+      </AuthProvider>
+    </GlobalProvider>
   );
 };
 
