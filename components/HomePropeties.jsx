@@ -5,8 +5,10 @@ import { fetchProperties } from "@/utils/request";
 
 const HomeProperties = async () => {
   const data = await fetchProperties();
-  const recentProperties = data.properties
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const properties = data?.data?.result.properties ?? [];
+
+  const recentProperties = properties
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
     .slice(0, 3);
 
   return (

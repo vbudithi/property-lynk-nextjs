@@ -3,32 +3,48 @@ import Property from "@/models/Property";
 import { getSessionUser } from "@/utils/getSessionUser";
 import cloudinary from "@/config/cloudinary";
 import { NextResponse } from "next/server";
+import {
+  serverError,
+  successResponse,
+  unauthorized,
+} from "@/utils/apiResponse";
 
 //GET /api/properties
 export const GET = async (request) => {
   try {
     await connectDB();
+    const page = request.nextUrl.searchParams.get("page") || 1;
 
-    const properties = await Property.find({});
+    const pageSize = request.nextUrl.searchParams.get("pageSize") || 6;
 
-    return new Response(JSON.stringify({ properties }), {
-      status: 200,
-    });
+    const skip = (page - 1) * pageSize;
+
+    const total = await Property.countDocuments({});
+
+    const properties = await Property.find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+
+    const result = {
+      total,
+      properties,
+    };
+
+    return successResponse({ result }, "Properties fetched successfully");
   } catch (error) {
-    return NextResponse.json(
-      { error: "Something went wrong" },
-      { status: 500 }
-    );
+    return serverError("Failed to create the property");
   }
 };
 
+//POST /api/properties
 export const POST = async (request) => {
   try {
     await connectDB();
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
-      return NextResponse({ message: "UserID is required" }, { status: 401 });
+      return unauthorized();
     }
 
     const { userId } = sessionUser;
@@ -99,12 +115,10 @@ export const POST = async (request) => {
     const newProperty = new Property(propertyData);
     await newProperty.save();
 
-    console.log("New Property Created:", newProperty._id);
-
-    return Response.redirect(
+    return NextResponse.redirect(
       `${process.env.NEXTAUTH_URL}/properties/${newProperty._id}`
     );
   } catch (error) {
-    return new Response("Failed to create property", { status: 500 });
+    return serverError("Failed to create the property");
   }
 };

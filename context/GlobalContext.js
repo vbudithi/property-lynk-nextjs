@@ -13,7 +13,7 @@ export function GlobalProvider({ children }) {
       try {
         const res = await fetch("/api/messages/unread-count");
         const result = await res.json();
-        setUnreadCount(result.data.count);
+        setUnreadCount(result.data);
       } catch (error) {
         console.error("Failed to fetch unread count", error);
       }
