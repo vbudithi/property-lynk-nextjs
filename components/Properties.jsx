@@ -34,6 +34,10 @@ const Properties = () => {
     fetchProperties();
   }, [page, pageSize]);
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   // handle missing or empty data
   if (!Array.isArray(properties) || properties.length === 0) {
     return (
@@ -51,10 +55,6 @@ const Properties = () => {
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <section className="px-4 py-6">
