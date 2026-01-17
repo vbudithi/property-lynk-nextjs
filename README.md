@@ -48,10 +48,26 @@ Used for:
 - Image transformations
 
 ---
+  ### screenshots
+![Homepage1](/public/screenshots/homepage1.png)
+![Homepage2](/public/screenshots/homepage2.png)
+![Property Listings](/public/screenshots/propertylistings.png)
+![Saved Properties](/public/screenshots/savedproperties.png)
+![User Profile](/public/screenshots/userprofile.png)
+![Add Property1](/public/screenshots/addproperty1.png)
+![Add Property2](/public/screenshots/addproperty2.png)
+![Next_auth](/public/screenshots/next_auth.png)
+![propertypage1](/public/screenshots/propertypage1.png)
+![propertypage2](/public/screenshots/propertypage2.png)
+![propertyenquiry](/public/screenshots/propertyenquiry.png)
+![search](/public/screenshots/search.png)
+![MongoDB User Messages](/public/screenshots/mongo_messages.png)
+![MongoDB Properties list](/public/screenshots/mongo_properties.png)
+![MongoDB list of users](/public/screenshots/mongo_users.png)
 
-## 📦 Local Setup
+---
 
-Install dependencies:
+## 📦 Local Setup:
 
 ```bash
 npm install     # Install dependencies
